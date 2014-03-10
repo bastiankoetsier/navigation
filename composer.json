@@ -1,0 +1,20 @@
+{
+    "name": "bkoetsier/navigation",
+    "description": "",
+    "authors": [
+        {
+            "name": "Bastian Koetsier",
+            "email": "bastian.koetsier@googlemail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.1.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Bkoetsier\\Navigation\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
