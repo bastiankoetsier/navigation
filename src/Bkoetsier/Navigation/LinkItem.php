@@ -10,7 +10,7 @@ class LinkItem extends Item{
 		$this->uri = $uri;
 	}
 
-	public function getUrl()
+	public function getUri()
 	{
 		return $this->uri;
 	}
