@@ -68,9 +68,9 @@ class Bucket {
 		{
 			switch($type)
 			{
-				case 'link':    $newItem = new LinkItem($item->id, $item->name, $item->slug);
+				case 'link':    $newItem = new LinkItem($item->id,utf8_decode($item->name), $item->slug);
 					break;
-				default :       $newItem = new RawItem($item->id,$item->name);
+				default :       $newItem = new RawItem($item->id,utf8_decode($item->name));
 			}
 			if ($item->parent === 0)
 			{

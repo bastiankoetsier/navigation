@@ -9,4 +9,9 @@ class LinkItem extends Item{
 		$this->label = $label;
 		$this->uri = $uri;
 	}
-} 
+
+	public function getUrl()
+	{
+		return $this->uri;
+	}
+}
