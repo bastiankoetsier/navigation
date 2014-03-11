@@ -1,7 +1,7 @@
 <?php namespace Bkoetsier\Navigation;
 
 
-class Bucket  implements \ArrayAccess{
+class Bucket  implements \ArrayAccess,\Countable{
 
 	protected $items = [];
 	protected $name;
@@ -131,5 +131,15 @@ class Bucket  implements \ArrayAccess{
 	public function offsetUnset($offset)
 	{
 		unset($this->items[$offset]);
+	}
+
+	/**
+	 * Count elements of an object
+	 * @return int The custom count as an integer.
+	 * The return value is cast to an integer.
+	 */
+	public function count()
+	{
+		return count($this->items);
 	}
 }
