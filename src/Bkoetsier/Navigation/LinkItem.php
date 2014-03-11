@@ -14,4 +14,9 @@ class LinkItem extends Item{
 	{
 		return $this->uri;
 	}
+
+	public function setUri($uri)
+	{
+		$this->uri = $uri;
+	}
 }
