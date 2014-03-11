@@ -1,8 +1,5 @@
 <?php namespace Bkoetsier\Navigation;
 
-
-use Traversable;
-
 class Bucket  implements \IteratorAggregate{
 
 	protected $items = [];
@@ -97,6 +94,6 @@ class Bucket  implements \IteratorAggregate{
 	 */
 	public function getIterator()
 	{
-		return new \ArrayIterator($this->items);
+		return new \RecursiveArrayIterator($this->items);
 	}
 }
