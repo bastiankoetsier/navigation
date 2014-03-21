@@ -1,6 +1,4 @@
-<?php
-
-namespace Bkoetsier\Navigation;
+<?php namespace Bkoetsier\Navigation\Items;
 
 interface ItemInterface
 {
@@ -29,8 +27,8 @@ interface ItemInterface
 	 */
 	public function setParent($parentId);
 
+
 	/**
-	 * adds new item to collection
 	 * @param ItemInterface $item
 	 * @return mixed
 	 */

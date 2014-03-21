@@ -1,16 +1,16 @@
-<?php namespace Bkoetsier\Navigation;
+<?php namespace Bkoetsier\Navigation\Items;
 
-abstract class Item implements ItemInterface
+class Item implements ItemInterface
 {
-
 	protected $id;
 	protected $parent = null;
 	protected $label;
 	protected $children = [];
 
-	public function __construct($id)
+	public function __construct($id,$label)
 	{
 		$this->id = $id;
+		$this->setLabel($label);
 	}
 
 	/**
@@ -77,4 +77,14 @@ abstract class Item implements ItemInterface
 	{
 		return $this->label;
 	}
-} 
+
+	public function setLabel($label)
+	{
+		$this->label = $label;
+	}
+
+	public function __toString()
+	{
+		return $this->getLabel();
+	}
+}

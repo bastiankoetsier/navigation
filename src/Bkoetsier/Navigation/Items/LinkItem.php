@@ -1,13 +1,13 @@
-<?php namespace Bkoetsier\Navigation;
+<?php namespace Bkoetsier\Navigation\Items;
+
 
 class LinkItem extends Item{
 
 	protected $uri;
 	public function __construct($id,$label, $uri)
 	{
-		parent::__construct($id);
-		$this->label = $label;
-		$this->uri = $uri;
+		parent::__construct($id,$label);
+		$this->setUri($uri);
 	}
 
 	public function getUri()
