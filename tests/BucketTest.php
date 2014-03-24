@@ -58,10 +58,8 @@ class BucketTest extends PHPUnit_Framework_TestCase {
 		$parent->shouldReceive('getLabel')->andReturn(false);
 		$parent->shouldReceive('getId')->andReturn(false);
 		$parent->shouldReceive('hasChildren')->andReturn(true);
-		$parent->shouldReceive('getChildren')->andReturn($child);
+		$parent->shouldReceive('getChildren')->andReturn([$child]);
 		$child->shouldReceive('getLabel')->andReturn('child');
-
-
 
 		$parent->addChild($child);
 		$bucket->add($parent);
@@ -100,6 +98,13 @@ class BucketTest extends PHPUnit_Framework_TestCase {
 		$bucket = new Bucket();
 		$item1 = m::mock('Bkoetsier\Navigation\Items\ItemInterface');
 		$item2 = m::mock('Bkoetsier\Navigation\Items\ItemInterface');
+
+		$item1->shouldReceive('addChild')->once();
+		$item1->shouldReceive('hasChildren')->andReturn(false);
+
+		$item1->addChild($item2);
+		$bucket->add($item1);
+
 	}
 
 
