@@ -1,6 +1,5 @@
 <?php
 use Bkoetsier\Navigation\Bucket;
-use Bkoetsier\Navigation\Items\Item;
 use Mockery as m;
 
 
