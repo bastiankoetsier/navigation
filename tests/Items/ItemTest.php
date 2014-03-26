@@ -23,16 +23,17 @@ class ItemTest extends PHPUnit_Framework_TestCase{
 
 	public function testAddChild()
 	{
-		$item = new Item(1,'First');
+		$item = new Item('First',1);
 		$child = $this->getItemMock();
 
-		$child->shouldReceive('setParent')->with($item->getId())->once();
-		$child->shouldReceive('getParent')->andReturn(1);
+		$child->shouldReceive('getId')->once()->andReturn('2');
+		$child->shouldReceive('setParentId')->with($item->getId())->once();
+		$child->shouldReceive('setLevel')->once();
+		$child->shouldReceive('getParentId')->andReturn(1);
 
 		$item->addChild($child);
 		$this->assertTrue($item->hasChildren());
-		$this->assertEquals($child->getParent(),$item->getId());
-
+		$this->assertEquals($child->getParentId(),$item->getId());
 	}
 
 

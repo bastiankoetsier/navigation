@@ -4,9 +4,10 @@
 class LinkItem extends Item{
 
 	protected $uri;
-	public function __construct($id,$label, $uri)
+	protected $active = false;
+	public function __construct($label,$uri,$id = null)
 	{
-		parent::__construct($id,$label);
+		parent::__construct($label,$id);
 		$this->setUri($uri);
 	}
 
@@ -19,4 +20,19 @@ class LinkItem extends Item{
 	{
 		$this->uri = $uri;
 	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isActive()
+	{
+		return $this->active;
+	}
+
+	public function setActive()
+	{
+		$this->active = ! $this->isActive();
+	}
+
+
 }

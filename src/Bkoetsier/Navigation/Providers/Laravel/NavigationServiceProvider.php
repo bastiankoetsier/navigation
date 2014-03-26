@@ -1,8 +1,10 @@
-<?php namespace Bkoetsier\Navigation\Providers;
+<?php namespace Bkoetsier\Navigation\Providers\Laravel;
 
+use Bkoetsier\Navigation\Navigation;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
-class LaravelNavigationServiceProvider extends ServiceProvider {
+class NavigationServiceProvider extends ServiceProvider {
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -28,7 +30,14 @@ class LaravelNavigationServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		$this->app->bindShared('navigation',function($app){
+			return new Navigation;
+		});
+
+		$this->app->booting(function(){
+			$loader = AliasLoader::getInstance();
+			$loader->alias('Navigation','Bkoetsier\Navigation\Facades\Laravel\Navigation');
+		});
 	}
 
 	/**

@@ -3,14 +3,18 @@
 class Item implements ItemInterface
 {
 	protected $id;
-	protected $parent = null;
+	protected $parentId = null;
 	protected $label;
 	protected $children = [];
+	protected $level = 0;
 
-	public function __construct($id,$label)
+	public function __construct($label,$id = null)
 	{
-		$this->id = $id;
 		$this->setLabel($label);
+		if(is_null($id))
+			$this->id = uniqid();
+		else
+			$this->id = $id;
 	}
 
 	/**
@@ -27,19 +31,21 @@ class Item implements ItemInterface
 	 * @param $parentId
 	 * @return mixed
 	 */
-	public function setParent($parentId)
+	public function setParentId($parentId)
 	{
-		$this->parent = $parentId;
+		$this->parentId = $parentId;
 	}
 	/**
 	 * adds new item to collection
 	 * @param ItemInterface $item
 	 * @return mixed
 	 */
-	public function addChild(ItemInterface $item)
+	public function addChild(ItemInterface &$item)
 	{
-		$item->setParent($this->getId());
-		$this->children[] = $item;
+		$item->setParentId($this->getId());
+		$item->setLevel($this->getLevel() + 1);
+		$this->children[] = $item->getId();
+		return $this;
 	}
 
 	/**
@@ -55,9 +61,9 @@ class Item implements ItemInterface
 	 * Returns parent-identifier for this item
 	 * @return mixed
 	 */
-	public function getParent()
+	public function getParentId()
 	{
-		return $this->parent;
+		return $this->parentId;
 	}
 
 	/**
@@ -81,6 +87,17 @@ class Item implements ItemInterface
 	public function setLabel($label)
 	{
 		$this->label = $label;
+		return $this;
+	}
+
+	public function setLevel($level)
+	{
+		$this->level = $level;
+	}
+
+	public function getLevel()
+	{
+		return $this->level;
 	}
 
 	public function __toString()

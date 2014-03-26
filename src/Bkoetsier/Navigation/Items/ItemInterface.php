@@ -6,7 +6,7 @@ interface ItemInterface
 	 * Returns parent-identifier for this item
 	 * @return mixed
 	 */
-	public function getParent();
+	public function getParentId();
 
 	/**
 	 * Gets unique(!) identifier
@@ -25,14 +25,13 @@ interface ItemInterface
 	 * @param $parentId
 	 * @return mixed
 	 */
-	public function setParent($parentId);
-
+	public function setParentId($parentId);
 
 	/**
 	 * @param ItemInterface $item
 	 * @return mixed
 	 */
-	public function addChild(ItemInterface $item);
+	public function addChild(ItemInterface &$item);
 
 	/**
 	 * Returns true if item has children
@@ -45,4 +44,10 @@ interface ItemInterface
 	 * @return string
 	 */
 	public function getLabel();
+	
+	public function setLevel($level);
+	
+	public function getLevel();
+	
+	
 }

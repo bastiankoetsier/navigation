@@ -32,50 +32,30 @@ class BucketTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testEmptyBucketThrowsException()
 	{
-		$bucket = new Bucket();
+		$bucket = new Bucket('test');
 		$bucket->getItems();
 	}
 
 	public function testFindMethod()
 	{
-		$bucket = new Bucket();
+		$bucket = new Bucket('test');
 		$item = $this->getItemMock();
 
+		$item->shouldReceive('getId')->twice()->andReturn(uniqid());
 		$item->shouldReceive('getLabel')->once()->andReturn('test');
 
 		$bucket->add($item);
 		$this->assertEquals($item,$bucket->find('test'));
 	}
 
-	public function testRecursiveFind()
-	{
-		$bucket = new Bucket();
-		$parent = $this->getItemMock();
-		$child = $this->getItemMock();
-
-		$parent->shouldReceive('addChild')->once();
-		$parent->shouldReceive('getLabel')->andReturn(false);
-		$parent->shouldReceive('getId')->andReturn(false);
-		$parent->shouldReceive('hasChildren')->andReturn(true);
-		$parent->shouldReceive('getChildren')->andReturn([$child]);
-		$child->shouldReceive('getLabel')->andReturn('child');
-
-		$parent->addChild($child);
-		$bucket->add($parent);
-
-		$this->assertEquals($child,$bucket->find('child'));
-
-
-	}
 
 	public function testFindReturnsFalse()
 	{
-		$bucket = new Bucket();
+		$bucket = new Bucket('test');
 		$item = $this->getItemMock();
 
 		$item->shouldReceive('getLabel')->once()->andReturn('foo');
-		$item->shouldReceive('getId')->once()->andReturn(uniqid());
-		$item->shouldReceive('hasChildren')->once()->andReturn(false);
+		$item->shouldReceive('getId')->times(3)->andReturn('1');
 
 		$bucket->add($item);
 		$this->assertFalse($bucket->find('test'));
@@ -83,28 +63,13 @@ class BucketTest extends PHPUnit_Framework_TestCase {
 
 	public function testBucketCount()
 	{
-		$bucket = new Bucket();
+		$bucket = new Bucket('test');
 		$item = $this->getItemMock();
-
-		$item->shouldReceive('hasChildren')->once()->andReturn(false);
-
+		$item->shouldReceive('getId')->andReturn('1');
 		$bucket->add($item);
 		$this->assertCount(1,$bucket);
 	}
 
-	public function testBucketCountWithNestedItems()
-	{
-		$bucket = new Bucket();
-		$item1 = m::mock('Bkoetsier\Navigation\Items\ItemInterface');
-		$item2 = m::mock('Bkoetsier\Navigation\Items\ItemInterface');
-
-		$item1->shouldReceive('addChild')->once();
-		$item1->shouldReceive('hasChildren')->andReturn(false);
-
-		$item1->addChild($item2);
-		$bucket->add($item1);
-
-	}
 
 
 

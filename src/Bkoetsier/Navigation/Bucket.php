@@ -11,6 +11,18 @@ class Bucket  implements \IteratorAggregate, \Countable{
 	protected $items = [];
 	protected $name;
 
+	const MAX_LEVEL = 3;
+
+	function __construct($name)
+	{
+		$this->name = $name;
+	}
+
+	public function getName()
+	{
+		return $this->name;
+	}
+
 	/**
 	 * Adds ItemInterface item to $this->items (root)
 	 * @param ItemInterface $item
@@ -18,14 +30,42 @@ class Bucket  implements \IteratorAggregate, \Countable{
 	 */
 	public function add(ItemInterface $item)
 	{
-		$this->items[] = $item;
-		return end($this->items);
+		$this->items[$item->getId()] = $item;
+		return $this->items[$item->getId()];
+	}
+
+	public function clear()
+	{
+		$this->items = [];
 	}
 
 	public function getItems()
 	{
 		if(!count($this->items)) { throw new BucketEmptyException('Bucket must be hydrated / filled '); }
 		return $this->items;
+	}
+
+	public function getChildren($parentLabel,$maxLevel= self::MAX_LEVEL)
+	{
+		$parent = $this->find($parentLabel);
+		if( ! $parent->hasChildren()) { return false; }
+		$children = [];
+		foreach($parent->getChildren() as $childId)
+		{
+			$child = $this->find($childId);
+			$children[] = $child;
+
+			if($child->getLevel() < $maxLevel)
+			{
+				if($child->hasChildren())
+				{
+					$keys = array_keys($children);
+					$id = end($keys);
+					$children[$id] = [$children[$id],$this->getChildren($child->getLabel(),$maxLevel)];
+				}
+			}
+		}
+		return $children;
 	}
 
 	/**
@@ -35,7 +75,8 @@ class Bucket  implements \IteratorAggregate, \Countable{
 	 */
 	public function find($label,$items = null)
 	{
-		if(is_null($items)) $items = $this->getItems();
+		if(is_null($items)) { $items = $this->getItems(); }
+		if(isset($this->items[$label])) { return $this->items[$label]; }
 		foreach($items as $item)
 		{
 			/**
@@ -44,11 +85,6 @@ class Bucket  implements \IteratorAggregate, \Countable{
 			if($item->getLabel() == $label || $item->getId() == $label)
 			{
 				return $item;
-			}
-			elseif($item->hasChildren())
-			{
-				$found =  $this->find($label,$item->getChildren());
-				if($found){ return $found; }
 			}
 		}
 		return false;
@@ -66,9 +102,9 @@ class Bucket  implements \IteratorAggregate, \Countable{
 		$item = $this->find($label);
 		if( ! $item) { throw new ItemNotFoundException(); }
 		$pathItems[] = $item;
-		while( $item->getParent() )
+		while( $item->getParentId() )
 		{
-			$parentId = $item->getParent();
+			$parentId = $item->getParentId();
 			$item = $this->find($parentId);
 			$pathItems[] = $item;
 		}
@@ -76,17 +112,17 @@ class Bucket  implements \IteratorAggregate, \Countable{
 		return $pathItems;
 	}
 
-	public function hydrate($data, $itemIdentifier='id', $itemName='name',$parentIdentifier='parent', $type='link')
+	public function hydrate($data, $itemIdentifier='id', $itemLabel='name',$parentIdentifier='parent', $type='link')
 	{
 		foreach($data as $item)
 		{
 			switch($type)
 			{
 				case 'link':
-					$newItem = new LinkItem($item->{$itemIdentifier},utf8_decode($item->{$itemName}), $item->slug);
+					$newItem = new LinkItem($item->{$itemLabel}, $item->slug,$item->{$itemIdentifier});
 					break;
-				default :
-					$newItem = new Item($item->{$itemIdentifier},utf8_decode($item->{$itemName}));
+				default:
+					$newItem = new Item($item->{$itemLabel},$item->{$itemIdentifier});
 			}
 			if ($item->{$parentIdentifier} == 0 || is_null($item->{$parentIdentifier}) )
 			{
@@ -95,6 +131,7 @@ class Bucket  implements \IteratorAggregate, \Countable{
 			elseif ($parent = $this->find($item->{$parentIdentifier}))
 			{
 				$parent->addChild($newItem);
+				$this->add($newItem);
 			}
 		}
 		return $this;
@@ -116,34 +153,7 @@ class Bucket  implements \IteratorAggregate, \Countable{
 	 */
 	public function count()
 	{
-		return $this->countItems();
+		return count($this->items);
 	}
 
-	protected function countItems($items = null)
-	{
-		if(is_null($items))
-		{
-			$items = $this->getItems();
-			$count = 0;
-		}
-		else
-		{
-			$count = 1;
-		}
-		foreach($items as $item)
-		{
-			/**
-			 * @var $item ItemInterface
-			 */
-			if($item->hasChildren())
-			{
-				$count += $this->countItems($item->getChildren());
-			}
-			else
-			{
-				$count++;
-			}
-		}
-		return $count;
-	}
 }
