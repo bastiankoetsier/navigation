@@ -53,8 +53,7 @@ class Bucket  implements \IteratorAggregate, \Countable{
 		foreach($parent->getChildren() as $childId)
 		{
 			$child = $this->find($childId);
-			// push child in extra array if maxlevel = 1 to render properly
-			if($maxLevel == 1)
+			if($maxLevel == $parent->getLevel() + 1)
 			{
 				$children[] = [$child];
 			}
