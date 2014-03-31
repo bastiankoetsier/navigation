@@ -48,7 +48,9 @@ class BucketTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($item,$bucket->find('test'));
 	}
 
-
+	/**
+	 * @expectedException Bkoetsier\Navigation\Exceptions\ItemNotFoundException
+	 */
 	public function testFindReturnsFalse()
 	{
 		$bucket = new Bucket('test');
@@ -58,7 +60,7 @@ class BucketTest extends PHPUnit_Framework_TestCase {
 		$item->shouldReceive('getId')->times(3)->andReturn('1');
 
 		$bucket->add($item);
-		$this->assertFalse($bucket->find('test'));
+		$bucket->find('test');
 	}
 
 	public function testBucketCount()
