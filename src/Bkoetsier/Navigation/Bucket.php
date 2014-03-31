@@ -48,13 +48,20 @@ class Bucket  implements \IteratorAggregate, \Countable{
 	public function getChildren($parentLabel,$maxLevel= self::MAX_LEVEL)
 	{
 		$parent = $this->find($parentLabel);
-		if( ! $parent->hasChildren()) { return false; }
+		if( ! $parent->hasChildren() || $parent->getLevel() == $maxLevel) { return false; }
 		$children = [];
 		foreach($parent->getChildren() as $childId)
 		{
 			$child = $this->find($childId);
-			$children[] = $child;
-
+			// push child in extra array if maxlevel = 1 to render properly
+			if($maxLevel == 1)
+			{
+				$children[] = [$child];
+			}
+			else
+			{
+				$children[] = $child;
+			}
 			if($child->getLevel() < $maxLevel)
 			{
 				if($child->hasChildren())
@@ -70,8 +77,9 @@ class Bucket  implements \IteratorAggregate, \Countable{
 
 	/**
 	 * @param string $label
-	 * @param array $items|null
-	 * @return ItemInterface|false
+	 * @param array $items |null
+	 * @throws Exceptions\ItemNotFoundException
+	 * @return ItemInterface
 	 */
 	public function find($label,$items = null)
 	{
@@ -87,7 +95,7 @@ class Bucket  implements \IteratorAggregate, \Countable{
 				return $item;
 			}
 		}
-		return false;
+		throw new ItemNotFoundException;
 	}
 
 	/**
@@ -100,7 +108,6 @@ class Bucket  implements \IteratorAggregate, \Countable{
 	{
 		$pathItems = [];
 		$item = $this->find($label);
-		if( ! $item) { throw new ItemNotFoundException(); }
 		$pathItems[] = $item;
 		while( $item->getParentId() )
 		{

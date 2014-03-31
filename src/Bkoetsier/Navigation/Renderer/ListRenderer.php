@@ -10,26 +10,23 @@ class ListRenderer implements RenderableInterface{
 
 	public function render($items)
 	{
+		if(!count($items)){ return ''; }
 		$this->setItems($items);
-		$output = '';
-		$itemOutput = '';
 		$output = '<%s>%s</%s>';
-
+		$itemOutput = '';
 		foreach($items as $item)
 		{
-			$itemOutput .= '<li>';
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\ItemInterface
 			 */
 			if(is_a($item, '\Bkoetsier\Navigation\Items\LinkItem'))
 			{
-				$itemOutput .= $this->renderLink($item);
+				$itemOutput .= '<li>'.$this->renderLink($item);
 			}
-			else
+			elseif (is_array($item))
 			{
-				$itemOutput .= $this->renderItem($item);
+				$itemOutput .= $this->render($item);
 			}
-
 			$itemOutput .= '</li>';
 		}
 		return sprintf($output,$this->getElement(),$itemOutput,$this->getElement());
