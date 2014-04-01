@@ -126,15 +126,20 @@ class Bucket  implements \IteratorAggregate, \Countable{
 				default:
 					$newItem = new Item($item->{$itemLabel},$item->{$itemIdentifier});
 			}
-			if ($item->{$parentIdentifier} == 0 || is_null($item->{$parentIdentifier}) )
+			try
 			{
-				$this->add($newItem);
+				if ($item->{$parentIdentifier} == 0 || is_null($item->{$parentIdentifier}) )
+				{
+					$this->add($newItem);
+				}
+				elseif ($parent = $this->find($item->{$parentIdentifier}))
+				{
+					$parent->addChild($newItem);
+					$this->add($newItem);
+				}
 			}
-			elseif ($parent = $this->find($item->{$parentIdentifier}))
-			{
-				$parent->addChild($newItem);
-				$this->add($newItem);
-			}
+			catch(ItemNotFoundException $e){}
+
 		}
 		return $this;
 	}
