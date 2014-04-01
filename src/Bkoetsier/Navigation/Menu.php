@@ -31,15 +31,7 @@ class Menu {
 	{
 		$parent = $this->bucket->find($parentLabel);
 		$children = $this->bucket->getChildren($parentLabel,$maxLevel);
-		if($children)
-		{
-			return (array_merge([$parent],$children));
-		}
-		else
-		{
-			return array($parent);
-		}
-
+		return array_merge([$parent],$children);
 	}
 
 }

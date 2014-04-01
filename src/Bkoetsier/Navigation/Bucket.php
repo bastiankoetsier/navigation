@@ -50,24 +50,20 @@ class Bucket  implements \IteratorAggregate, \Countable{
 		$parent = $this->find($parentLabel);
 		if( ! $parent->hasChildren() || $parent->getLevel() == $maxLevel) { return false; }
 		$children = [];
+
 		foreach($parent->getChildren() as $childId)
 		{
 			$child = $this->find($childId);
-			if($maxLevel == $parent->getLevel() + 1)
-			{
-				$children[] = [$child];
-			}
-			else
-			{
-				$children[] = $child;
-			}
 			if($child->getLevel() < $maxLevel)
 			{
 				if($child->hasChildren())
 				{
-					$keys = array_keys($children);
-					$id = end($keys);
-					$children[$id] = [$children[$id],$this->getChildren($child->getLabel(),$maxLevel)];
+					$tmp = $this->getChildren($child->getLabel(),$maxLevel);
+					$children[] = [$child,$tmp];
+				}
+				else
+				{
+					$children[] = [$child];
 				}
 			}
 		}
