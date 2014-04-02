@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "title": "Books",
+        "parent": null,
+        "uri": "books"
+    },
+    {
+        "id": 2,
+        "title": "Fiction",
+        "parent": 1,
+        "uri": "books/fiction"
+    }
+]
