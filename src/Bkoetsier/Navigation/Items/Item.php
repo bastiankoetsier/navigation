@@ -3,7 +3,7 @@
 class Item implements ItemInterface
 {
 	protected $id;
-	protected $parentId = null;
+	protected $parentId;
 	protected $label;
 	protected $children = [];
 	protected $level = 0;
@@ -36,7 +36,7 @@ class Item implements ItemInterface
 		$this->parentId = $parentId;
 	}
 	/**
-	 * adds new item to collection
+	 * Adds new item to collection and increments items´ level
 	 * @param ItemInterface $item
 	 * @return mixed
 	 */
@@ -68,7 +68,7 @@ class Item implements ItemInterface
 
 	/**
 	 * Returns array of ItemInterface-items
-	 * @return array
+	 * @return ItemInterface[]
 	 */
 	public function getChildren()
 	{
@@ -76,7 +76,7 @@ class Item implements ItemInterface
 	}
 
 	/**
-	 *  Returns Label for item
+	 * Returns Label for item
 	 * @return string
 	 */
 	public function getLabel()

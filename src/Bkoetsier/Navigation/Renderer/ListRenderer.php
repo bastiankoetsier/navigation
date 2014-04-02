@@ -3,34 +3,10 @@
 use Bkoetsier\Navigation\Items\ItemInterface;
 use Bkoetsier\Navigation\Items\LinkItem;
 
-class ListRenderer implements RenderableInterface{
+class ListRenderer implements MenuRendererInterface,BreadcrumbRendererInterface{
 
 	protected $items = [];
 	protected $tag = 'ul';
-
-	public function render($items)
-	{
-		if(!count($items)){ return ''; }
-		$this->setItems($items);
-		$output = '<%s>%s</%s>';
-		$itemOutput = '';
-		foreach($items as $item)
-		{
-			/**
-			 * @var $item \Bkoetsier\Navigation\Items\ItemInterface
-			 */
-			if(is_a($item, '\Bkoetsier\Navigation\Items\LinkItem'))
-			{
-				$itemOutput .= '<li>'.$this->renderLink($item);
-			}
-			elseif (is_array($item))
-			{
-				$itemOutput .= $this->render($item);
-			}
-			$itemOutput .= '</li>';
-		}
-		return sprintf($output,$this->getElement(),$itemOutput,$this->getElement());
-	}
 
 	/**
 	 * @param array $items
@@ -54,11 +30,40 @@ class ListRenderer implements RenderableInterface{
 	{
 		return $item->getLabel();
 	}
-	
+
 	protected function renderLink(LinkItem $item)
 	{
 		return sprintf('<a href="%s">%s</a>',$item->getUri(),$item->getLabel());
 	}
 
+	public function renderMenu(ItemInterface $parentItem, $maxDepth = 3)
+	{
+		$output = '<%s>%s</%s>';
+		$itemOutput = '';
+		$itemOutput .= '<li>';
+		$itemOutput .= $this->renderLink($parentItem);
+		if ($parentItem->hasChildren() && ($parentItem->getLevel() + 1) <= $maxDepth)
+		{
+			foreach($parentItem->getChildren() as $child)
+			{
+				$itemOutput .= $this->renderMenu($child,$maxDepth);
+			}
+		}
+		$itemOutput .= '</li>';
+		return sprintf($output,$this->getElement(),$itemOutput,$this->getElement());
+	}
 
+	public function renderBreadcrumb($items)
+	{
+		$output = '<%s>%s</%s>';
+		$itemOutput = '';
+		foreach($items as $item)
+		{
+			/**
+			 * @var $item ItemInterface
+			 */
+			$itemOutput .= '<li>'.$this->renderLink($item).'</li>';
+		}
+		return sprintf($output,$this->getElement(),$itemOutput,$this->getElement());
+	}
 }
