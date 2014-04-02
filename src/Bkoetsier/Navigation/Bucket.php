@@ -1,8 +1,6 @@
 <?php namespace Bkoetsier\Navigation;
 
 use Bkoetsier\Navigation\Exceptions\BucketEmptyException;
-use Bkoetsier\Navigation\Exceptions\ItemNotFoundException;
-use Bkoetsier\Navigation\Items\Item;
 use Bkoetsier\Navigation\Items\ItemInterface;
 use Bkoetsier\Navigation\Items\LinkItem;
 
@@ -10,8 +8,6 @@ class Bucket  implements \IteratorAggregate, \Countable{
 
 	protected $items = [];
 	protected $name;
-
-	const MAX_LEVEL = 3;
 
 	function __construct($name)
 	{
@@ -34,11 +30,6 @@ class Bucket  implements \IteratorAggregate, \Countable{
 		return $this->items[$item->getId()];
 	}
 
-	public function clear()
-	{
-		$this->items = [];
-	}
-
 	public function getItems()
 	{
 		if(!count($this->items)) { throw new BucketEmptyException('Bucket must be hydrated / filled '); }
@@ -46,10 +37,10 @@ class Bucket  implements \IteratorAggregate, \Countable{
 	}
 
 	/**
+	 * Searches for $label in $items (id & label)
 	 * @param string $label
 	 * @param array $items |null
-	 * @throws Exceptions\ItemNotFoundException
-	 * @return ItemInterface
+	 * @return ItemInterface | false
 	 */
 	public function find($label,$items = null)
 	{
@@ -78,13 +69,13 @@ class Bucket  implements \IteratorAggregate, \Countable{
 	/**
 	 * Searches for $label in $this->items and recall path to it all the way up
 	 * @param $label
-	 * @throws Exceptions\ItemNotFoundException
-	 * @return array of ItemInterface
+	 * @return ItemInterface[] | array()
 	 */
 	public function pathItems($label)
 	{
 		$pathItems = [];
 		$item = $this->find($label);
+		if( ! $item){ return []; }
 		$pathItems[] = $item;
 		while( $item->getParentId() )
 		{
@@ -96,18 +87,20 @@ class Bucket  implements \IteratorAggregate, \Countable{
 		return $pathItems;
 	}
 
-	public function hydrate($data, $itemIdentifier='id', $itemLabel='name',$parentIdentifier='parent', $type='link')
+	/**
+	 * Hydrates the bucket with array of Objects
+	 * @param $data \StdClass[]
+	 * @param string $itemIdentifier Name of the identifier-property
+	 * @param string $itemLabel Name of the label-property
+	 * @param string $parentIdentifier Name of the parent-identifier-property
+	 * @param string $uriField Name of uri-property
+	 * @return $this
+	 */
+	public function hydrate($data, $itemIdentifier='id', $itemLabel='name',$parentIdentifier='parent',$uriField = 'slug')
 	{
 		foreach($data as $item)
 		{
-			switch($type)
-			{
-				case 'link':
-					$newItem = new LinkItem($item->{$itemLabel}, $item->slug,$item->{$itemIdentifier});
-					break;
-				default:
-					$newItem = new Item($item->{$itemLabel},$item->{$itemIdentifier});
-			}
+			$newItem = new LinkItem($item->{$itemLabel}, $item->{$uriField},$item->{$itemIdentifier});
 			if ($item->{$parentIdentifier} == 0 || is_null($item->{$parentIdentifier}) )
 			{
 				$this->add($newItem);

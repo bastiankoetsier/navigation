@@ -1,6 +1,6 @@
 <?php namespace Bkoetsier\Navigation\Items;
 
-class Item implements ItemInterface
+abstract class Item implements ItemInterface
 {
 	protected $id;
 	protected $parentId;

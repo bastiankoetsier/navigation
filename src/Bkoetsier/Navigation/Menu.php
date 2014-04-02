@@ -6,14 +6,20 @@ use Bkoetsier\Navigation\Renderer\MenuRendererInterface;
 
 class Menu {
 
-
+	/**
+	 * @var Bucket
+	 */
 	protected $bucket;
+
+	/**
+	 * @var ItemInterface
+	 */
 	protected $parentItem;
 
 	/**
-	 * @var Renderer\RenderableInterface
+	 * @var Renderer\MenuRendererInterface
 	 */
-	private $renderer;
+	protected $renderer;
 
 	function __construct(Bucket $bucket,MenuRendererInterface $renderer)
 	{
@@ -21,21 +27,37 @@ class Menu {
 		$this->renderer = $renderer;
 	}
 
+	/**
+	 * @return Bucket
+	 */
 	public function getBucket()
 	{
 		return $this->bucket;
 	}
 
+	/**
+	 * Delegates the data to the bucket´s 'hydrate'-method
+	 */
 	public function fill()
 	{
 		call_user_func_array([$this->getBucket(),'hydrate'],func_get_args());
 	}
 
+	/**
+	 * Adds new item to bucket-root
+	 * @param ItemInterface $item
+	 */
 	public function add(ItemInterface $item)
 	{
 		$this->bucket->add($item);
 	}
 
+	/**
+	 * Searches the bucket for $parentLabel
+	 * and sets it as the $parentItem for rendering
+	 * @param $parentLabel
+	 * @return $this|bool
+	 */
 	public function subNav($parentLabel)
 	{
 		$parent = $this->bucket->find($parentLabel);
@@ -48,6 +70,12 @@ class Menu {
 			return false;
 	}
 
+	/**
+	 * Delegates the rendering to the BreadcrumbRendererInterface
+	 * with $parentItem
+	 * @param int $maxDepth
+	 * @return mixed
+	 */
 	public function render($maxDepth = 3)
 	{
 		return $this->renderer->renderMenu($this->parentItem,$maxDepth);
