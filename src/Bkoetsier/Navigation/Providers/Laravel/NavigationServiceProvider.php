@@ -31,13 +31,9 @@ class NavigationServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bindShared('navigation.renderer',function($app){
-			return new ListRenderer;
-		});
+
 		$this->app->bindShared('navigation',function($app){
-			$nav = new Navigation();
-			$nav->setRenderer($app->make('navigation.renderer'));
-			return $nav;
+			return new Navigation();
 		});
 		$this->app->booting(function(){
 			$loader = AliasLoader::getInstance();

@@ -1,6 +1,6 @@
 <?php namespace Bkoetsier\Navigation;
 
-use Bkoetsier\Navigation\Exceptions\RendererMissingException;
+use Bkoetsier\Navigation\Renderer\ListRenderer;
 use Bkoetsier\Navigation\Renderer\RenderableInterface;
 
 class Navigation {
@@ -17,13 +17,13 @@ class Navigation {
 	public function menu($name)
 	{
 		if(isset($this->menus[$name])) { return $this->menus[$name];}
-		$this->menus[$name] = new Menu($this->handler($name));
+		$this->menus[$name] = new Menu($this->handler($name),new ListRenderer);
 		return end($this->menus);
 	}
 
 	public function breadcrumbs($name)
 	{
-		return new Breadcrumbs($this->handler($name));
+		return new Breadcrumbs($this->handler($name),new ListRenderer);
 	}
 
 	public function setRenderer(RenderableInterface $renderer)
@@ -66,15 +66,11 @@ class Navigation {
 		return end($this->buckets);
 	}
 
-	public function getRenderer()
-	{
-		return $this->renderer;
-	}
 
-	public function render($items)
+	/*public function render($items,$maxDepth = 3)
 	{
 		if(is_null($this->renderer)) {throw new RendererMissingException('You must set the renderer-instance first'); }
-		return $this->renderer->render($items);
-	}
+		return $this->renderer->render($items,$maxDepth);
+	}*/
 
 } 

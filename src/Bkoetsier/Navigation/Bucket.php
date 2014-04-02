@@ -45,31 +45,6 @@ class Bucket  implements \IteratorAggregate, \Countable{
 		return $this->items;
 	}
 
-	public function getChildren($parentLabel,$maxLevel= self::MAX_LEVEL)
-	{
-		$parent = $this->find($parentLabel);
-		if( ! $parent->hasChildren() || $parent->getLevel() == $maxLevel) { return false; }
-		$children = [];
-
-		foreach($parent->getChildren() as $childId)
-		{
-			$child = $this->find($childId);
-			if($child->getLevel() < $maxLevel)
-			{
-				if($child->hasChildren())
-				{
-					$tmp = $this->getChildren($child->getLabel(),$maxLevel);
-					$children[] = [$child,$tmp];
-				}
-				else
-				{
-					$children[] = [$child];
-				}
-			}
-		}
-		return $children;
-	}
-
 	/**
 	 * @param string $label
 	 * @param array $items |null
@@ -79,7 +54,6 @@ class Bucket  implements \IteratorAggregate, \Countable{
 	public function find($label,$items = null)
 	{
 		if(is_null($items)) { $items = $this->getItems(); }
-		if(isset($this->items[$label])) { return $this->items[$label]; }
 		foreach($items as $item)
 		{
 			/**
@@ -89,8 +63,16 @@ class Bucket  implements \IteratorAggregate, \Countable{
 			{
 				return $item;
 			}
+			elseif($item->hasChildren())
+			{
+				$found = $this->find($label,$item->getChildren());
+				if($found)
+				{
+					return $found;
+				}
+			}
 		}
-		throw new ItemNotFoundException;
+		return false;
 	}
 
 	/**
@@ -126,20 +108,14 @@ class Bucket  implements \IteratorAggregate, \Countable{
 				default:
 					$newItem = new Item($item->{$itemLabel},$item->{$itemIdentifier});
 			}
-			try
+			if ($item->{$parentIdentifier} == 0 || is_null($item->{$parentIdentifier}) )
 			{
-				if ($item->{$parentIdentifier} == 0 || is_null($item->{$parentIdentifier}) )
-				{
-					$this->add($newItem);
-				}
-				elseif ($parent = $this->find($item->{$parentIdentifier}))
-				{
-					$parent->addChild($newItem);
-					$this->add($newItem);
-				}
+				$this->add($newItem);
 			}
-			catch(ItemNotFoundException $e){}
-
+			elseif ($parent = $this->find($item->{$parentIdentifier}))
+			{
+				$parent->addChild($newItem);
+			}
 		}
 		return $this;
 	}

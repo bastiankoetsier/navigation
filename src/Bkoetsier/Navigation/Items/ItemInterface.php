@@ -33,6 +33,8 @@ interface ItemInterface
 	 */
 	public function addChild(ItemInterface &$item);
 
+
+
 	/**
 	 * Returns true if item has children
 	 * @return bool
@@ -44,10 +46,10 @@ interface ItemInterface
 	 * @return string
 	 */
 	public function getLabel();
-	
+
 	public function setLevel($level);
-	
+
 	public function getLevel();
-	
-	
+
+
 }

@@ -2,14 +2,23 @@
 
 
 use Bkoetsier\Navigation\Items\ItemInterface;
+use Bkoetsier\Navigation\Renderer\MenuRendererInterface;
 
 class Menu {
 
-	protected $bucket = null;
 
-	function __construct(Bucket $bucket)
+	protected $bucket;
+	protected $parentItem;
+
+	/**
+	 * @var Renderer\RenderableInterface
+	 */
+	private $renderer;
+
+	function __construct(Bucket $bucket,MenuRendererInterface $renderer)
 	{
 		$this->bucket = $bucket;
+		$this->renderer = $renderer;
 	}
 
 	public function getBucket()
@@ -27,11 +36,21 @@ class Menu {
 		$this->bucket->add($item);
 	}
 
-	public function subNav($parentLabel,$maxLevel = Bucket::MAX_LEVEL)
+	public function subNav($parentLabel)
 	{
 		$parent = $this->bucket->find($parentLabel);
-		$children = $this->bucket->getChildren($parentLabel,$maxLevel);
-		return array_merge([$parent],$children);
+		if($parent)
+		{
+			$this->parentItem = $parent;
+			return $this;
+		}
+		else
+			return false;
+	}
+
+	public function render($maxDepth = 3)
+	{
+		return $this->renderer->renderMenu($this->parentItem,$maxDepth);
 	}
 
 }

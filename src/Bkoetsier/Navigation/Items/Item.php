@@ -44,7 +44,7 @@ class Item implements ItemInterface
 	{
 		$item->setParentId($this->getId());
 		$item->setLevel($this->getLevel() + 1);
-		$this->children[] = $item->getId();
+		$this->children[] = $item;
 		return $this;
 	}
 
