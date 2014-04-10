@@ -90,10 +90,10 @@ $nav->menu('main')->subNav('Books')->render();
 For the breadcrumbs you just call the same bucket:
 ```php
 //with Laravel
-Navigation::breadcrumbs('main')->pathTo('Fiction')->render();
+Navigation::breadcrumbs()->pathTo('Fiction')->render();
 
 //without Laravel
-$nav->breadcrumbs('main')->pathTo('Fiction')-render();
+$nav->breadcrumbs()->pathTo('Fiction')-render();
 ```
 
 
