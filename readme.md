@@ -8,7 +8,7 @@ Pull in the package with composer:
 ```js
 {
     "require": {
-                "bkoetsier/navigation": "1.0"
+                "bkoetsier/navigation": "dev-master"
                 }
 }
 ```
@@ -70,10 +70,10 @@ In the `fill` method you are able to rename each parameter to your corresponding
 $data = json_decode(file_get_contents('example.json'));
 
 // with Laravel
-Navigation::menu('main')->fill($data, $itemIdentifier='id', $itemLabel='title',$parentIdentifier='parent',$uriField = 'uri');
+Navigation::bucket()->hydrate($data, $itemIdentifier='id', $itemLabel='title',$parentIdentifier='parent',$uriField = 'uri');
 
 //without Laravel
-$nav->menu('main')->fill(($data, $itemIdentifier='id', $itemLabel='title',$parentIdentifier='parent',$uriField = 'uri');
+$nav->bucket()->hydrate($data, $itemIdentifier='id', $itemLabel='title',$parentIdentifier='parent',$uriField = 'uri');
 ```
 
 
