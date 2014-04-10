@@ -44,4 +44,4 @@ class Breadcrumbs {
 	{
 		return $this->renderer->renderBreadcrumb($this->pathItems);
 	}
-} 
+}

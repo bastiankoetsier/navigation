@@ -41,6 +41,7 @@ class Menu {
 	public function fill()
 	{
 		call_user_func_array([$this->getBucket(),'hydrate'],func_get_args());
+		return $this;
 	}
 
 	/**
@@ -79,6 +80,16 @@ class Menu {
 	public function render($maxDepth = 3)
 	{
 		return $this->renderer->renderMenu($this->parentItem,$maxDepth);
+	}
+
+	public function setRenderer(MenuRendererInterface $renderer)
+	{
+		$this->renderer = $renderer;
+	}
+
+	public function getParentItem()
+	{
+		return $this->parentItem;
 	}
 
 }

@@ -1,78 +1,82 @@
 <?php namespace Bkoetsier\Navigation;
 
+use Bkoetsier\Navigation\Exceptions\BucketEmptyException;
 use Bkoetsier\Navigation\Renderer\ListRenderer;
 
 class Navigation {
 
-	protected $buckets = [];
+	protected $bucket = null;
+	protected $breadcrumbs = null;
+	protected $menus = [];
 
 	/**
 	 * Returns new Menu with Bucket
-	 * @param $name
+	 * @param $menuName
+	 * @throws Exceptions\BucketEmptyException
 	 * @return Menu
 	 */
-	public function menu($name)
+	public function menu($menuName)
 	{
-		return new Menu($this->findBucket($name),new ListRenderer);
+		if(isset($this->menus[$menuName]))
+		{
+			return $this->menus[$menuName];
+		}
+		if( ! $this->findBucket()->isFilled())
+		{
+			throw new BucketEmptyException('Bucket must be hydrated / filled ');
+		}
+		return $this->menus[$menuName] = new Menu($this->findBucket(),new ListRenderer);
 	}
 
 	/**
 	 * Returns new Breadcrumb with Bucket
-	 * @param $name
+	 * @throws Exceptions\BucketEmptyException
 	 * @return Breadcrumbs
 	 */
-	public function breadcrumbs($name)
+	public function breadcrumbs()
 	{
-		return new Breadcrumbs($this->findBucket($name),new ListRenderer);
+		if( ! is_null($this->breadcrumbs))
+		{
+			return $this->breadcrumbs;
+		}
+		if( ! $this->findBucket()->isFilled())
+		{
+			throw new BucketEmptyException('Bucket must be hydrated / filled ');
+		}
+		return $this->breadcrumbs = new Breadcrumbs($this->findBucket(),new ListRenderer);
 	}
 
-	/**
-	 * Returns all registered Buckets
-	 * @return array
-	 */
-	public function getBuckets()
+	public function bucket()
 	{
-		return $this->buckets;
+		return $this->findBucket();
 	}
 
 	/**
 	 * Searches all registered buckets for $bucketName
 	 * if it doesn´t exist it´ll create /register it
-	 * @param $bucketName
 	 * @return Bucket
 	 */
-	protected function findBucket($bucketName)
+	protected function findBucket()
 	{
-		foreach($this->getBuckets() as $bucket)
+		if( is_null($this->getBucket()))
 		{
-			/**
-			 * @var $bucket Bucket
-			 */
-			if($bucket->getName() == $bucketName)
-				return $bucket;
+			return $this->newBucket();
 		}
-		return $this->newBucket($bucketName);
+		return $this->getBucket();
 	}
 
 	/**
 	 * Creates new Bucket
-	 * @param $bucketName
-	 * @return mixed
+	 * @return Bucket
 	 */
-	protected function newBucket($bucketName)
+	protected function newBucket()
 	{
-		$bucket = new Bucket($bucketName);
-		return $this->addBucket($bucket);
+		$this->$bucket = new Bucket();
+
 	}
 
-	/**
-	 * Adds Bucket to bucket list
-	 * @param Bucket $bucket
-	 * @return mixed
-	 */
-	protected function addBucket(Bucket $bucket)
+	public function getBucket()
 	{
-		$this->buckets[] = $bucket;
-		return end($this->buckets);
+		return $this->bucket;
 	}
 }

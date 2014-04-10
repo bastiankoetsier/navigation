@@ -33,7 +33,7 @@ class ListRenderer implements MenuRendererInterface,BreadcrumbRendererInterface{
 
 	protected function renderLink(LinkItem $item)
 	{
-		return sprintf('<a href="%s">%s</a>',$item->getUri(),$item->getLabel());
+		return sprintf('<a href="%s">%s</a>',url($item->getUri()),$item->getLabel());
 	}
 
 	public function renderMenu(ItemInterface $parentItem, $maxDepth = 3)
@@ -42,6 +42,7 @@ class ListRenderer implements MenuRendererInterface,BreadcrumbRendererInterface{
 		$itemOutput = '';
 		$itemOutput .= '<li>';
 		$itemOutput .= $this->renderLink($parentItem);
+		$itemOutput .= '</li>';
 		if ($parentItem->hasChildren() && ($parentItem->getLevel() + 1) <= $maxDepth)
 		{
 			foreach($parentItem->getChildren() as $child)
@@ -49,7 +50,6 @@ class ListRenderer implements MenuRendererInterface,BreadcrumbRendererInterface{
 				$itemOutput .= $this->renderMenu($child,$maxDepth);
 			}
 		}
-		$itemOutput .= '</li>';
 		return sprintf($output,$this->getElement(),$itemOutput,$this->getElement());
 	}
 

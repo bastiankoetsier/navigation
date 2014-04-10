@@ -7,17 +7,6 @@ use Bkoetsier\Navigation\Items\LinkItem;
 class Bucket  implements \IteratorAggregate, \Countable{
 
 	protected $items = [];
-	protected $name;
-
-	function __construct($name)
-	{
-		$this->name = $name;
-	}
-
-	public function getName()
-	{
-		return $this->name;
-	}
 
 	/**
 	 * Adds ItemInterface item to $this->items (root)
@@ -30,10 +19,20 @@ class Bucket  implements \IteratorAggregate, \Countable{
 		return $this->items[$item->getId()];
 	}
 
+	public function isFilled()
+	{
+		if(!count($this->items))
+			return false;
+		else
+			return true;
+	}
 	public function getItems()
 	{
-		if(!count($this->items)) { throw new BucketEmptyException('Bucket must be hydrated / filled '); }
-		return $this->items;
+		if($this->isFilled())
+		{
+			return $this->items;
+		}
+		throw new BucketEmptyException('Bucket must be hydrated / filled ');
 	}
 
 	/**
@@ -50,7 +49,7 @@ class Bucket  implements \IteratorAggregate, \Countable{
 			/**
 			 * @var $item ItemInterface
 			 */
-			if($item->getLabel() == $label || $item->getId() == $label)
+			if($item->getId() == $label || $item->getLabel() == $label )
 			{
 				return $item;
 			}
