@@ -71,8 +71,7 @@ class Navigation {
 	 */
 	protected function newBucket()
 	{
-		$this->$bucket = new Bucket();
-
+		return $this->bucket = new Bucket();
 	}
 
 	public function getBucket()
