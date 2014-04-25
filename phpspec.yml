@@ -1,0 +1,3 @@
+suites:
+  navigation_suite:
+    namespace: Bkoetsier\Navigation
