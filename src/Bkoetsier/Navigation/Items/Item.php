@@ -1,25 +1,40 @@
 <?php namespace Bkoetsier\Navigation\Items;
 
-abstract class Item implements ItemInterface
+class Item implements ItemInterface
 {
 	protected $id;
-	protected $parentId;
 	protected $label;
-	protected $children = [];
+	protected $parentId = null;
 	protected $level = 0;
+	protected $left = 0;
+	protected $right = 0;
+
 
 	public function __construct($label,$id = null)
 	{
-		$this->setLabel($label);
+	/*	$this->setLabel($label);
 		if(is_null($id))
 			$this->id = uniqid();
 		else
-			$this->id = $id;
+			$this->id = $id;*/
+	}
+
+
+	public function isRoot()
+	{
+		return is_null($this->getParentId());
 	}
 
 	/**
-	 * Gets unique(!) identifier
-	 * @return mixed
+	 * @param null $id
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+	}
+
+	/**
+	 * @return null
 	 */
 	public function getId()
 	{
@@ -27,38 +42,50 @@ abstract class Item implements ItemInterface
 	}
 
 	/**
-	 * Sets parent-identifier
-	 * @param $parentId
+	 * @param mixed $label
+	 */
+	public function setLabel($label)
+	{
+		$this->label = $label;
+	}
+
+	/**
 	 * @return mixed
+	 */
+	public function getLabel()
+	{
+		return $this->label;
+	}
+
+	/**
+	 * @param int $level
+	 */
+	public function setLevel($level)
+	{
+		if( ! filter_var($level,FILTER_VALIDATE_INT))
+		{
+			throw new \InvalidArgumentException('passed argument is no integer');
+		}
+		$this->level = $level;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLevel()
+	{
+		return $this->level;
+	}
+
+	/**
+	 * @param mixed $parentId
 	 */
 	public function setParentId($parentId)
 	{
 		$this->parentId = $parentId;
 	}
-	/**
-	 * Adds new item to collection and increments items´ level
-	 * @param ItemInterface $item
-	 * @return mixed
-	 */
-	public function addChild(ItemInterface &$item)
-	{
-		$item->setParentId($this->getId());
-		$item->setLevel($this->getLevel() + 1);
-		$this->children[] = $item;
-		return $this;
-	}
 
 	/**
-	 * Returns true if item has children
-	 * @return bool
-	 */
-	public function hasChildren()
-	{
-		return !!count($this->children);
-	}
-
-	/**
-	 * Returns parent-identifier for this item
 	 * @return mixed
 	 */
 	public function getParentId()
@@ -67,41 +94,46 @@ abstract class Item implements ItemInterface
 	}
 
 	/**
-	 * Returns array of ItemInterface-items
-	 * @return ItemInterface[]
+	 * @param int $left
+	 * @throws \InvalidArgumentException
 	 */
-	public function getChildren()
+	public function setLeft($left)
 	{
-		return $this->children;
+		if( ! filter_var($left,FILTER_VALIDATE_INT))
+		{
+			throw new \InvalidArgumentException('passed argument is no integer');
+		}
+		$this->left = $left;
 	}
 
 	/**
-	 * Returns Label for item
-	 * @return string
+	 * @return int
 	 */
-	public function getLabel()
+	public function getLeft()
 	{
-		return $this->label;
+		return $this->left;
 	}
 
-	public function setLabel($label)
+	/**
+	 * @param int $right
+	 * @throws \InvalidArgumentException
+	 */
+	public function setRight($right)
 	{
-		$this->label = $label;
-		return $this;
+		if( ! filter_var($right,FILTER_VALIDATE_INT))
+		{
+			throw new \InvalidArgumentException('passed argument is no integer');
+		}
+		$this->right = $right;
 	}
 
-	public function setLevel($level)
+	/**
+	 * @return int
+	 */
+	public function getRight()
 	{
-		$this->level = $level;
+		return $this->right;
 	}
 
-	public function getLevel()
-	{
-		return $this->level;
-	}
 
-	public function __toString()
-	{
-		return $this->getLabel();
-	}
 }

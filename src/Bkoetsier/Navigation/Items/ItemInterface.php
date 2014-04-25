@@ -1,55 +1,46 @@
-<?php namespace Bkoetsier\Navigation\Items;
+<?php
+namespace Bkoetsier\Navigation\Items;
 
 interface ItemInterface
 {
 	/**
-	 * Returns parent-identifier for this item
 	 * @return mixed
 	 */
-	public function getParentId();
+	public function getLabel();
 
 	/**
-	 * Gets unique(!) identifier
-	 * @return mixed
+	 * @return int
+	 */
+	public function getLevel();
+
+	/**
+	 * @param mixed $label
+	 */
+	public function setLabel($label);
+
+	/**
+	 * @return null
 	 */
 	public function getId();
 
 	/**
-	 * Returns array of ItemInterface-items
-	 * @return array
+	 * @param null $id
 	 */
-	public function getChildren();
+	public function setId($id);
 
 	/**
-	 * Sets parent-identifier
-	 * @param $parentId
-	 * @return mixed
+	 * @param mixed $parentId
+	 * @return mixed|void
 	 */
 	public function setParentId($parentId);
 
 	/**
-	 * @param ItemInterface $item
-	 * @return mixed
+	 * @param int $level
 	 */
-	public function addChild(ItemInterface &$item);
-
-
-
-	/**
-	 * Returns true if item has children
-	 * @return bool
-	 */
-	public function hasChildren();
-
-	/**
-	 *  Returns Label for item
-	 * @return string
-	 */
-	public function getLabel();
-
 	public function setLevel($level);
 
-	public function getLevel();
-
-
+	/**
+	 * @return mixed
+	 */
+	public function getParentId();
 }
