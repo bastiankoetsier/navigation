@@ -72,7 +72,7 @@ class Menu {
 	}
 
 	/**
-	 * Delegates the rendering to the BreadcrumbRendererInterfac
+	 * Delegates the rendering to the BreadcrumbRendererInterface
 	 * with $parentItem
 	 * @param int $maxDepth
 	 * @return mixed
