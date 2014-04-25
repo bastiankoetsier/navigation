@@ -36,7 +36,7 @@ class ListRenderer implements MenuRendererInterface,BreadcrumbRendererInterface{
 		return sprintf('<a href="%s">%s</a>',url($item->getUri()),$item->getLabel());
 	}
 
-	public function renderMenu(ItemInterface $parentItem, $maxDepth = 3)
+	public function renderMenu(ItemInterface $parentItem, $maxDepth = 3,$ul = true)
 	{
 		$output = '<%s>%s</%s>';
 		$itemOutput = '';
