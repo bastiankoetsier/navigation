@@ -16,23 +16,25 @@ class BucketSpec extends ObjectBehavior
 
 	function it_should_only_add_items_to_collection(ItemInterface $item)
 	{
-		$this->push($item);
+		$itemId = md5('item1');
+		$item->getId()->willReturn($itemId);
+		$this->put($itemId,$item);
 		$this->first()->shouldReturn($item);
 	}
 
 	function it_should_find_item_by_identifier(ItemInterface $item)
 	{
-		$id = md5('item1');
-		$item->getId()->willReturn($id);
-		$this->push($item);
-		$this->findById($id)->shouldReturn($item);
+		$itemId = md5('item1');
+		$item->getId()->willReturn($itemId);
+		$this->put($itemId,$item);
+		$this->findById($itemId)->shouldReturn($item);
 	}
 
 	function it_should_return_false_if_item_could_not_be_found_by_identifier(ItemInterface $item)
 	{
 		$itemId = 'lorem';
 		$item->getId()->willReturn($itemId);
-		$this->push($item);
+		$this->put($itemId,$item);
 		$searchId = 'item1';
 		$this->findById($searchId)->shouldReturn(false);
 	}

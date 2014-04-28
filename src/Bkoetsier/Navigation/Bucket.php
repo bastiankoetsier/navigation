@@ -10,17 +10,14 @@ class Bucket extends Collection {
 
 	public function push(ItemInterface $item)
 	{
-		parent::push($item);
+		parent::push($item->getId(),$item);
 	}
 
 	public function findById($id)
 	{
-		foreach($this->all() as $item)
+		if(isset($this->all()[$id]))
 		{
-			if($item->getId() == $id)
-			{
-				return $item;
-			}
+			return $this->all()[$id];
 		}
 		return false;
 	}
