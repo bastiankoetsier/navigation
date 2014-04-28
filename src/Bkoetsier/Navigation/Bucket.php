@@ -1,23 +1,23 @@
 <?php namespace Bkoetsier\Navigation;
 
-use Bkoetsier\Navigation\Exceptions\BucketEmptyException;
-use Bkoetsier\Navigation\Items\ItemInterface;
-use Bkoetsier\Navigation\Items\LinkItem;
+use Bkoetsier\Navigation\Items\Item;
 use Illuminate\Support\Collection;
 
+class Bucket {
 
-class Bucket extends Collection {
+	protected $collection;
 
-	public function push(ItemInterface $item)
+	function __construct(Collection $collection)
 	{
-		parent::push($item->getId(),$item);
+		$this->collection = $collection;
 	}
 
+	
 	public function findById($id)
 	{
-		if(isset($this->all()[$id]))
+		if(isset($this->collection->all()[$id]))
 		{
-			return $this->all()[$id];
+			return $this->collection->all()[$id];
 		}
 		return false;
 	}
@@ -68,4 +68,15 @@ class Bucket extends Collection {
 		}
 		return $this;
 	}*/
+
+
+    public function add(Item $item)
+    {
+       $this->collection->put($item->getId(),$item);
+    }
+
+    public function getCollection()
+    {
+        return $this->collection;
+    }
 }
