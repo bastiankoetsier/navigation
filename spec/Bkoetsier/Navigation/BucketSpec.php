@@ -53,7 +53,50 @@ class BucketSpec extends ObjectBehavior
 		$this->findById('non_existing_item')->shouldBe(false);
 	}
 
+	function it_can_get_max_left_and_right_values(Collection $collection,Item $item1)
+	{
+		$itemId = uniqid();
+		$item1->getId()->willReturn($itemId);
+		$item1->getLeft()->willReturn(5);
+		$item1->getRight()->willReturn(3);
 
+		$collection->put($itemId,$item1)->shouldBeCalled();
+		$collection->all()->willReturn([
+			$itemId => $item1,
+		]);
+		$this->beConstructedWith($collection);
+		$this->add($item1);
+
+		$this->getMaxLeft()->shouldBe(5);
+		$this->getMaxRight()->shouldBe(3);
+	}
+
+
+
+	function it_can_insert_children_to_existing_root_items(Collection $collection,Item $root,Item $child)
+	{
+		$rootId = uniqid();
+		$childId = uniqid();
+
+		$root->getId()->willReturn($rootId);
+		$root->getLeft()->willReturn(0);
+		$root->getRight()->willReturn(1);
+
+		$child->getId()->willReturn($childId);
+		$child->setLeft(1)->shouldBeCalled();
+		$child->setRight(2)->shouldBeCalled();
+
+		$collection->put($rootId,$root)->shouldBeCalled();
+		$collection->put($childId,$child)->shouldBeCalled();
+
+
+		$collection->all()->willReturn([
+			$rootId => $root,
+		]);
+		$this->beConstructedWith($collection);
+		$this->addChild($child,$root);
+
+	}
 
 
 }

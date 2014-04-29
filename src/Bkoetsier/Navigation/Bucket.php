@@ -79,4 +79,56 @@ class Bucket {
     {
         return $this->collection;
     }
+
+	protected function getMax($column)
+	{
+		if( ! in_array(strtolower($column),['left','right']))
+		{
+			throw new \InvalidArgumentException("$column is not a valid Attribute");
+		}
+		$max = 0;
+		$method = 'get'.ucfirst($column);
+		foreach($this->getCollection()->all() as $item)
+		{
+			if($item->{$method}() > $max)
+			{
+				$max = $item->{$method}();
+			}
+		}
+		return $max;
+	}
+
+    public  function getMaxLeft()
+    {
+		return $this->getMax('left');
+    }
+
+	public function getMaxRight()
+	{
+		return $this->getMax('right');
+	}
+
+
+    public function addChild(Item $child, Item $parent)
+    {
+		$right = $parent->getRight();
+	    $child->setLeft($right);
+	    $child->setRight($right+1);
+	    $new = $right + 2;
+	    $this->collection = $this->getCollection()->map(function($item)use($right,$new){
+		    /**
+		     * @var $item \Bkoetsier\Navigation\Items\Item
+		     */
+		    if($item->getLeft() > $right)
+			{
+				$item->setLeft($new);
+			}
+		    if($item->getRight() > $right)
+		    {
+			    $item->setRight($new);
+		    }
+			return $item;
+	    });
+	    $this->add($child);
+    }
 }
