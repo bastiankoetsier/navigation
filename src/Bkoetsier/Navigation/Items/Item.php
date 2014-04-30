@@ -24,7 +24,7 @@ class Item
 
 	public function setLeft($left)
     {
-	    if( ! filter_var($left,FILTER_VALIDATE_INT))
+	    if( filter_var($left,FILTER_VALIDATE_INT) === false)
 	    {
 		    throw new \InvalidArgumentException('`left` is no integer');
 	    }
@@ -33,7 +33,7 @@ class Item
 
 	public function setRight($right)
     {
-	    if( ! filter_var($right,FILTER_VALIDATE_INT))
+	    if( filter_var($right,FILTER_VALIDATE_INT) === false)
 	    {
 		    throw new \InvalidArgumentException('`right` is no integer');
 	    }
@@ -42,7 +42,7 @@ class Item
 
 	public function setParent($parent)
 	{
-		if( !is_null($parent) && ! filter_var($parent,FILTER_VALIDATE_INT))
+		if( !is_null($parent) && filter_var($parent,FILTER_VALIDATE_INT) === false)
 		{
 			throw new \InvalidArgumentException('`parent` is not null or integer');
 		}
