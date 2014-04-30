@@ -21,6 +21,17 @@ class Bucket {
 		return false;
 	}
 
+	public function findByLabel($label)
+	{
+		return $this->collection->filter(function($item)use($label){
+			/**
+			 * @var $item Item
+			 */
+			if($item->getLabel() == $label){ return $item; }
+			return false;
+		});
+	}
+
 	/**
 	 * Searches for $label in $this->items and recall path to it all the way up
 	 * @param $label

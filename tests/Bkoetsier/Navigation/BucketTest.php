@@ -57,7 +57,24 @@ class BucketTest extends PHPUnit_Framework_TestCase
 		$itemId2 = uniqid();
 		$item2= $this->getItem();
 		$item2->shouldReceive('getId')->andReturn($itemId2);
+	}
 
+	/**
+	 * @test
+	 */
+	public function it_can_find_items_by_label()
+	{
+	    $item = $this->getItem();
+		$itemLabel = 'Item1';
+		$item->shouldReceive('getLabel')->andReturn($itemLabel);
+		$c = $this->getCollection();
+		$newCollection = $this->getCollection();
+		$newCollection->shouldReceive('first')->andReturn($item);
+		$newCollection->shouldReceive('count')->andReturn(0);
+		$c->shouldReceive('filter')->withAnyArgs()->andReturn($newCollection);
+		$bucket = new Bucket($c);
+		$this->assertEquals($item,$bucket->findByLabel($itemLabel)->first());
+		$this->assertCount(0,$bucket->findByLabel('nonExistentLabel'));
 	}
 
 	/**
@@ -112,8 +129,11 @@ class BucketTest extends PHPUnit_Framework_TestCase
 		$root = $this->getItem();
 		$root->shouldReceive('getId')->andReturn($rootId);
 		$root->shouldReceive('getLeft')->andReturn(0);
+
 		$root->shouldReceive('getRight')->andReturn(0)->byDefault();
 		$root->shouldReceive('getRight')->andReturn(1);
+
+		$root->shouldReceive('setLeft')->with(0)->once();
 		$root->shouldReceive('setRight')->with(1)->once();
 
 		$c = $this->getCollection();
