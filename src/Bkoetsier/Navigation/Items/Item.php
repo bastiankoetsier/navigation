@@ -9,11 +9,22 @@ class Item
 	protected $parent;
 
 
-	public function __construct($label, $left, $right, $parent)
+	public function __construct($label, $id = null, $left = null, $right = null, $parent = null)
 	{
+		if(is_null($id))
+		{
+			$this->setDefaultId();
+		}
+		if(is_null($left) || is_null($right))
+		{
+			$this->setDefaultLeftAndRight();
+		}
+		else
+		{
+			$this->setLeft($left);
+			$this->setRight($right);
+		}
 		$this->setLabel($label);
-		$this->setLeft($left);
-		$this->setRight($right);
 		$this->setParent($parent);
 	}
 
@@ -83,4 +94,15 @@ class Item
     {
         return $this->label;
     }
+
+    protected function setDefaultLeftAndRight()
+    {
+		$this->setLeft(0);
+	    $this->setRight(0);
+    }
+
+	protected function setDefaultId()
+	{
+		$this->setId(uniqid());
+	}
 }

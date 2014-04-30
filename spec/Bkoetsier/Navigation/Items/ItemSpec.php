@@ -9,7 +9,7 @@ class ItemSpec extends ObjectBehavior
 {
 	function let()
 	{
-		$this->beConstructedWith('Item1',8,15,-1);
+		$this->beConstructedWith('Item1',uniqid(),8,15,-1);
 	}
 
 	function it_gets_initialized_values()
@@ -34,6 +34,14 @@ class ItemSpec extends ObjectBehavior
 		$this->getLeft()->shouldBe(5);
 		$this->getRight()->shouldBe(5);
 		$this->getParent()->shouldBe(5);
+	}
+
+	function it_sets_default_id_and_left_and_right_values_if_no_constructor_args_given()
+	{
+		$this->beConstructedWith('Item1');
+		$this->getLeft()->shouldBe(0);
+		$this->getRight()->shouldBe(0);
+		$this->getId()->shouldNotBeNull();
 	}
 
 	function it_throws_exception_when_left_and_right()
