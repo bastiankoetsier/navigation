@@ -15,6 +15,10 @@ class Item
 		{
 			$this->setDefaultId();
 		}
+		else
+		{
+			$this->setId($id);
+		}
 		if(is_null($left) || is_null($right))
 		{
 			$this->setDefaultLeftAndRight();
@@ -35,28 +39,16 @@ class Item
 
 	public function setLeft($left)
     {
-	    if( filter_var($left,FILTER_VALIDATE_INT) === false)
-	    {
-		    throw new \InvalidArgumentException('`left` is no integer');
-	    }
 		$this->left = $left;
     }
 
 	public function setRight($right)
     {
-	    if( filter_var($right,FILTER_VALIDATE_INT) === false)
-	    {
-		    throw new \InvalidArgumentException('`right` is no integer');
-	    }
         $this->right = $right;
     }
 
 	public function setParent($parent)
 	{
-		if( !is_null($parent) && filter_var($parent,FILTER_VALIDATE_INT) === false)
-		{
-			throw new \InvalidArgumentException('`parent` is not null or integer');
-		}
 		$this->parent = $parent;
 	}
 

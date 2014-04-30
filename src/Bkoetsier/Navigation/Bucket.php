@@ -12,7 +12,6 @@ class Bucket {
 		$this->collection = $collection;
 	}
 
-	
 	public function findById($id)
 	{
 		if(isset($this->collection->all()[$id]))
@@ -105,30 +104,41 @@ class Bucket {
 
 	public function getMaxRight()
 	{
-		return $this->getMax('right');
+		$maxRight = $this->getMax('right');
+		if($maxRight === 0)
+		{
+			return ++$maxRight;
+		}
+		return $maxRight;
 	}
-
 
     public function addChild(Item $child, Item $parent)
     {
 		$right = $parent->getRight();
+	    $child->setParent($parent->getId());
 	    $child->setLeft($right);
 	    $child->setRight($right+1);
-	    $new = $right + 2;
-	    $this->collection = $this->getCollection()->map(function($item)use($right,$new){
+	    foreach($this->getCollection()->all() as $item)
+	    {
 		    /**
 		     * @var $item \Bkoetsier\Navigation\Items\Item
 		     */
-		    if($item->getLeft() > $right)
-			{
-				$item->setLeft($new);
-			}
-		    if($item->getRight() > $right)
+		    if($item->getLeft() >= $right)
 		    {
-			    $item->setRight($new);
+			    $item->setLeft($item->getLeft() + 2);
 		    }
-			return $item;
-	    });
+		    if($item->getRight() >= $right)
+		    {
+			    $item->setRight($item->getRight() + 2);
+		    }
+	    }
 	    $this->add($child);
     }
+
+	public function addRoot(Item $item)
+	{
+		$item->setLeft($this->getMaxRight());
+		$item->setRight($item->getLeft() +1 );
+		$this->add($item);
+	}
 }
