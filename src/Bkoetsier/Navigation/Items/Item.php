@@ -7,6 +7,7 @@ class Item
 	protected $left;
 	protected $right;
 	protected $parent;
+	protected $level;
 
 
 	public function __construct($label, $id = null, $left = null, $right = null, $parent = null)
@@ -28,6 +29,7 @@ class Item
 			$this->setLeft($left);
 			$this->setRight($right);
 		}
+		$this->setLevel(0);
 		$this->setLabel($label);
 		$this->setParent($parent);
 	}
@@ -96,5 +98,21 @@ class Item
 	protected function setDefaultId()
 	{
 		$this->setId(uniqid());
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getLevel()
+	{
+		return $this->level;
+	}
+
+	/**
+	 * @param int $level
+	 */
+	public function setLevel($level)
+	{
+		$this->level = $level;
 	}
 }

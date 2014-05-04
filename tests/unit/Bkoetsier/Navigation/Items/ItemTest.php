@@ -1,9 +1,9 @@
-<?php
+<?php namespace Bkoetsier\Navigation\Test\Unit;
 
 use Bkoetsier\Navigation\Items\Item;
 use Mockery as m;
 
-class ItemTest extends PHPUnit_Framework_TestCase
+class ItemTest extends \PHPUnit_Framework_TestCase
 {
 
 	public function tearDown()

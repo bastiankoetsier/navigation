@@ -14,9 +14,10 @@ class Bucket {
 
 	public function findById($id)
 	{
-		if(isset($this->collection->all()[$id]))
+		$allItems = $this->collection->all();
+		if(isset($allItems[$id]))
 		{
-			return $this->collection->all()[$id];
+			return $allItems[$id];
 		}
 		return false;
 	}
@@ -108,25 +109,82 @@ class Bucket {
 		return $max;
 	}
 
-    public  function getMaxLeft()
+    public function getMaxLeft()
     {
 		return $this->getMax('left');
     }
 
 	public function getMaxRight()
 	{
-		$maxRight = $this->getMax('right');
-		if($maxRight === 0)
-		{
-			return ++$maxRight;
-		}
-		return $maxRight;
+		return $this->getMax('right');
+	}
+
+	public function getChildrenAndSelf(Item $parent)
+	{
+		return $this->collection->filter(function($item)use($parent){
+			/**
+			 * @var $item \Bkoetsier\Navigation\Items\Item
+			 */
+			return ($item->getLeft() >=  $parent->getLeft()) && ($item->getRight() <= $parent->getRight());
+		});
+	}
+
+	public function getChildrenWithoutSelf(Item $parent)
+	{
+		return $this->collection->filter(function($item)use($parent){
+			/**
+			 * @var $item \Bkoetsier\Navigation\Items\Item
+			 */
+			return ($item->getLeft() >  $parent->getLeft()) && ($item->getRight() < $parent->getRight());
+		});
+	}
+
+	public function getSiblingsAndSelf(Item $sibling)
+	{
+		return $this->collection->filter(function($item)use($sibling){
+			/**
+			 * @var $item \Bkoetsier\Navigation\Items\Item
+			 */
+			return $item->getParent() == $sibling->getParent();
+		});
+	}
+
+	public function getSiblingsWithoutSelf(Item $sibling)
+	{
+		return $this->collection->filter(function($item)use($sibling){
+			/**
+			 * @var $item \Bkoetsier\Navigation\Items\Item
+			 */
+			return $item->getParent() == $sibling->getParent() && $item->getId() != $sibling->getId();
+		});
+	}
+
+	public function getAncestorsAndSelf(Item $descendant)
+	{
+		return $this->collection->filter(function($item)use($descendant){
+			/**
+			 * @var $item \Bkoetsier\Navigation\Items\Item
+			 */
+			return $item->getLeft() <= $descendant->getLeft();
+		});
+	}
+
+	public function getAncestorsWithoutSelf(Item $descendant)
+	{
+		return $this->collection->filter(function($item)use($descendant){
+			/**
+			 * @var $item \Bkoetsier\Navigation\Items\Item
+			 */
+			return $item->getLeft() < $descendant->getLeft();
+		});
 	}
 
     public function addChild(Item $child, Item $parent)
     {
 		$right = $parent->getRight();
+	    $level = $parent->getLevel();
 	    $child->setParent($parent->getId());
+	    $child->setLevel($level + 1);
 	    $child->setLeft($right);
 	    $child->setRight($right+1);
 	    foreach($this->getCollection()->all() as $item)
