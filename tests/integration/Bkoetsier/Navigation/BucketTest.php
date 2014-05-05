@@ -68,6 +68,26 @@ class BucketTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($root->getId(),$bucket->getCollection()->slice(1,1,true)->first()->getParent());
 	}
 	
+	/**
+	 * @test
+	 */
+	public function it_returns_true_if_parent_has_children()
+	{
+		$root = new Item('Dresses',1);
+		$root2 = new Item('Jeans',2);
+		$child = new Item('Cocktail dresses',3);
+
+		$collection = new Collection();
+		$bucket = new Bucket($collection);
+
+		$bucket->addRoot($root);
+		$bucket->addRoot($root2);
+		$bucket->addChild($child,$root);
+
+		$this->assertTrue($bucket->hasChildren($root));
+		$this->assertFalse($bucket->hasChildren($root2));
+	}
+	
 
 	/**
 	 * @test

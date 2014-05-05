@@ -119,6 +119,11 @@ class Bucket {
 		return $this->getMax('right');
 	}
 
+	public function hasChildren(Item $parent)
+	{
+		return !!count($this->getChildrenWithoutSelf($parent));
+	}
+
 	public function getChildrenAndSelf(Item $parent)
 	{
 		return $this->collection->filter(function($item)use($parent){
