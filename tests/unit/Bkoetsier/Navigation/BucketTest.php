@@ -121,12 +121,13 @@ class BucketTest extends \PHPUnit_Framework_TestCase
 		$root = $this->getItem();
 		$root->shouldReceive('getId')->once()->andReturn($rootId);
 		$root->shouldReceive('getLeft')->once()->andReturn(0);
+		$root->shouldReceive('getRight')->once()->andReturn(0);
 
 		$root->shouldReceive('setLeft')->once()->with(0);
 		$root->shouldReceive('setRight')->once()->with(1);
 
 		$c = $this->getCollection();
-		$c->shouldReceive('all')->once()->andReturn([],[$rootId=>$root]);
+		$c->shouldReceive('all')->twice()->andReturn([],[$rootId=>$root]);
 		$c->shouldReceive('put')->once()->with($rootId,$root);
 
 		$bucket = new Bucket($c);

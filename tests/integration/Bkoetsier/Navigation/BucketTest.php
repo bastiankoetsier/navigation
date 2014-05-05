@@ -42,12 +42,10 @@ class BucketTest extends \PHPUnit_Framework_TestCase
 
 		$bucket->addRoot($root1);
 		$bucket->addRoot($root2);
-
 		$this->assertEquals($root1,$bucket->getCollection()->first());
 		$this->assertEquals(1,$bucket->getCollection()->first()->getRight());
 		$this->assertEquals($root2,$bucket->getCollection()->slice(1,1,true)->first());
-		$this->assertEquals(2,$bucket->getCollection()->slice(1,1,true)->first()->getRight());
-
+		$this->assertEquals(3,$bucket->getCollection()->slice(1,1,true)->first()->getRight());
 	}
 
 	/**

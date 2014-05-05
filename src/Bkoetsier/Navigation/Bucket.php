@@ -211,8 +211,9 @@ class Bucket {
 
 	public function addRoot(Item $item)
 	{
-		$item->setLeft($this->getMaxRight());
-		$item->setRight($item->getLeft() +1 );
+		$left = ($this->getMaxRight() == 0) ? $this->getMaxRight() :  $this->getMaxRight() +1;
+		$item->setLeft($left);
+		$item->setRight($item->getLeft() + 1 );
 		$this->add($item);
 	}
 }
