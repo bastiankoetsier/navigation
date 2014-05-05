@@ -22,7 +22,7 @@ class Renderer {
 	{
 		$this->refresh();
 		$html = '<ul>';
-		foreach($this->bucket->getCollection() as $item)
+		foreach($this->bucket->getUntilMaxLevel($this->getMaxLevel()) as $item)
 		{
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item

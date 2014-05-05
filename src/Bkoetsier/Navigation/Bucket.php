@@ -183,6 +183,16 @@ class Bucket {
 		});
 	}
 
+	public function getUntilMaxLevel($maxLevel)
+	{
+		return $this->collection->filter(function($item)use($maxLevel){
+			/**
+			 * @var $item \Bkoetsier\Navigation\Items\Item
+			 */
+			return $item->getLevel() <= $maxLevel;
+		});
+	}
+
     public function addChild(Item $child, Item $parent)
     {
 		$right = $parent->getRight();
