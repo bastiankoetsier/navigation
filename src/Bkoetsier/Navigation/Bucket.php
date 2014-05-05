@@ -60,25 +60,24 @@ class Bucket {
 	 * @param string $itemIdentifier Name of the identifier-property
 	 * @param string $itemLabel Name of the label-property
 	 * @param string $parentIdentifier Name of the parent-identifier-property
-	 * @param string $uriField Name of uri-property
 	 * @return $this
 	 */
-	/*public function hydrate($data, $itemIdentifier='id', $itemLabel='name',$parentIdentifier='parent',$uriField = 'slug')
+	public function hydrate($data, $itemIdentifier='id', $itemLabel='name',$parentIdentifier='parent')
 	{
 		foreach($data as $item)
 		{
-			$newItem = new LinkItem($item->{$itemLabel}, $item->{$uriField},$item->{$itemIdentifier});
+			$newItem = new Item($item->{$itemLabel},$item->{$itemIdentifier});
 			if ($item->{$parentIdentifier} == 0 || is_null($item->{$parentIdentifier}) )
 			{
-				$this->add($newItem);
+				$this->addRoot($newItem);
 			}
-			elseif ($parent = $this->find($item->{$parentIdentifier}))
+			elseif ($parent = $this->findById($item->{$parentIdentifier}))
 			{
-				$parent->addChild($newItem);
+				$this->addChild($newItem,$parent);
 			}
 		}
 		return $this;
-	}*/
+	}
 
 
     public function add(Item $item)
