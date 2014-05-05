@@ -39,7 +39,7 @@ class Renderer {
 			}
 			else
 			{
-				$html .= $this->subMenu($item,$this->getMaxLevel());
+				$html .= $this->subMenu($item);
 				$html .= '</li>';
 			}
 		}
@@ -47,7 +47,7 @@ class Renderer {
 		return $html;
 	}
 
-	protected function subMenu(Item $parent,$maxLevel)
+	protected function subMenu(Item $parent)
 	{
 		$html = '';
 		$html .= '<ul>';
@@ -65,10 +65,10 @@ class Renderer {
 			{
 				continue;
 			}
-			if($parent->getLevel() +1 <= $maxLevel)
+			if($parent->getLevel() +1 <= $this->getMaxLevel())
 			{
 				$html .= '<li>'.$c->getLabel();
-				$html .= $this->subMenu($c,$maxLevel);
+				$html .= $this->subMenu($c);
 				$html .= '</li>';
 				$this->done[] = $c->getId();
 			}
@@ -98,10 +98,15 @@ class Renderer {
 
 	/**
 	 * @param int $maxLevel
+	 * @throws \InvalidArgumentException
 	 * @return $this
 	 */
 	public function setMaxLevel($maxLevel)
 	{
+		if($maxLevel < 0)
+		{
+			throw new \InvalidArgumentException("Max Level must be higher greater than 0");
+		}
 		$this->maxLevel = $maxLevel;
 		return $this;
 	}
