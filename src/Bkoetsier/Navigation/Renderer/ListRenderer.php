@@ -29,10 +29,6 @@ class ListRenderer implements BreadcrumbsRendererInterface,MenuRendererInterface
 		return $this->current;
 	}
 
-	public function setBucket(Bucket $bucket)
-	{
-		$this->bucket = $bucket;
-	}
 	public function getBucket()
 	{
 		return $this->bucket;
