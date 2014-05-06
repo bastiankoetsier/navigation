@@ -22,13 +22,13 @@ class Bucket {
 		return false;
 	}
 
-	public function findByLabel($label)
+	public function findByContent($content)
 	{
-		return $this->collection->filter(function($item)use($label){
+		return $this->collection->filter(function($item)use($content){
 			/**
 			 * @var $item Item
 			 */
-			if($item->getLabel() == $label){ return $item; }
+			if($item->getContent() == $content){ return $item; }
 			return false;
 		});
 	}
@@ -58,15 +58,15 @@ class Bucket {
 	 * Hydrates the bucket with array of Objects
 	 * @param $data \StdClass[]
 	 * @param string $itemIdentifier Name of the identifier-property
-	 * @param string $itemLabel Name of the label-property
+	 * @param string $itemContent Name of the label-property
 	 * @param string $parentIdentifier Name of the parent-identifier-property
 	 * @return $this
 	 */
-	public function hydrate($data, $itemIdentifier='id', $itemLabel='name',$parentIdentifier='parent')
+	public function hydrate($data, $itemIdentifier='id', $itemContent='name',$parentIdentifier='parent')
 	{
 		foreach($data as $item)
 		{
-			$newItem = new Item($item->{$itemLabel},$item->{$itemIdentifier});
+			$newItem = new Item($item->{$itemContent},$item->{$itemIdentifier});
 			if ($item->{$parentIdentifier} == 0 || is_null($item->{$parentIdentifier}) )
 			{
 				$this->addRoot($newItem);

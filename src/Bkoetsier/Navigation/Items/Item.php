@@ -3,14 +3,14 @@
 class Item
 {
 	protected $id;
-	protected $label;
+	protected $content;
 	protected $left;
 	protected $right;
 	protected $parent;
 	protected $level;
 
 
-	public function __construct($label, $id = null, $left = null, $right = null, $parent = null)
+	public function __construct($content, $id = null, $left = null, $right = null, $parent = null)
 	{
 		if(is_null($id))
 		{
@@ -30,7 +30,7 @@ class Item
 			$this->setRight($right);
 		}
 		$this->setLevel(0);
-		$this->setLabel($label);
+		$this->setContent($content);
 		$this->setParent($parent);
 	}
 
@@ -79,14 +79,14 @@ class Item
         return $this->id;
     }
 
-    public function setLabel($label)
+    public function setContent($content)
     {
-		$this->label = $label;
+		$this->content = $content;
     }
 
-    public function getLabel()
+    public function getContent()
     {
-        return $this->label;
+        return $this->content;
     }
 
     protected function setDefaultLeftAndRight()

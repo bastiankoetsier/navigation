@@ -39,7 +39,7 @@ $nav = new Navigation();
 First step is always hydrating the bucket. To do so, you have to provide an array of objects (preferably \StdClass)
 with the following properties:
 - `itemId` unique identifier like the database index
-- `itemLabel` the label that should be rendered for this item
+- `itemContent` the content that should be rendered for this item
 - `parentId` identifier of the parent
 - `uri` to be able to render this item as a link you have to provide a uri
 
@@ -63,17 +63,17 @@ In the `fill` method you are able to rename each parameter to your corresponding
 ]
 
 ```
-> Please note the different naming of the `itemLabel` as `title` !
+> Please note the different naming of the `itemContent` as `title` !
 
 ```php
 // format json to object-array
 $data = json_decode(file_get_contents('example.json'));
 
 // with Laravel
-Navigation::bucket()->hydrate($data, $itemIdentifier='id', $itemLabel='title',$parentIdentifier='parent',$uriField = 'uri');
+Navigation::bucket()->hydrate($data, $itemIdentifier='id', $itemContent='title',$parentIdentifier='parent',$uriField = 'uri');
 
 //without Laravel
-$nav->bucket()->hydrate($data, $itemIdentifier='id', $itemLabel='title',$parentIdentifier='parent',$uriField = 'uri');
+$nav->bucket()->hydrate($data, $itemIdentifier='id', $itemContent='title',$parentIdentifier='parent',$uriField = 'uri');
 ```
 
 

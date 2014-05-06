@@ -73,9 +73,9 @@ class BucketTest extends \PHPUnit_Framework_TestCase
 		$newCollection->shouldReceive('count')->once()->andReturn(0);
 		$c->shouldReceive('filter')->withAnyArgs()->times(3)->andReturn($newCollection);
 		$bucket = new Bucket($c);
-		$this->assertsame($newCollection,$bucket->findByLabel($itemLabel));
-		$this->assertEquals($item,$bucket->findByLabel($itemLabel)->first());
-		$this->assertCount(0,$bucket->findByLabel('nonExistentLabel'));
+		$this->assertsame($newCollection,$bucket->findByContent($itemLabel));
+		$this->assertEquals($item,$bucket->findByContent($itemLabel)->first());
+		$this->assertCount(0,$bucket->findByContent('nonExistentLabel'));
 	}
 
 	/**

@@ -34,7 +34,7 @@ class MenuRenderer implements RendererInterface{
 				continue;
 			}
 			$this->done[] = $item->getId();
-			$html .= '<li>'.$item->getLabel();
+			$html .= '<li>'.$item->getContent();
 			if(  ! $this->bucket->hasChildren($item,$filteredItems))
 			{
 				$html .= '</li>';
@@ -69,7 +69,7 @@ class MenuRenderer implements RendererInterface{
 			}
 			if($parent->getLevel() +1 <= $this->getMaxLevel())
 			{
-				$html .= '<li>'.$c->getLabel();
+				$html .= '<li>'.$c->getContent();
 				$html .= $this->subMenu($c,$filtered);
 				$html .= '</li>';
 				$this->done[] = $c->getId();
