@@ -33,26 +33,12 @@ class Bucket {
 		});
 	}
 
-	/**
-	 * Searches for $label in $this->items and recall path to it all the way up
-	 * @param $label
-	 * @return ItemInterface[] | array()
-	 */
-	/*public function pathItems($label)
+	public function pathItems($id)
 	{
-		$pathItems = [];
-		$item = $this->find($label);
-		if( ! $item){ return []; }
-		$pathItems[] = $item;
-		while( $item->getParentId() )
-		{
-			$parentId = $item->getParentId();
-			$item = $this->find($parentId);
-			$pathItems[] = $item;
-		}
-		krsort($pathItems);
-		return $pathItems;
-	}*/
+		$item = $this->findById($id);
+		if( ! $item){ return new Collection; }
+		return $this->getAncestorsAndSelf($item);
+	}
 
 	/**
 	 * Hydrates the bucket with array of Objects
@@ -184,7 +170,7 @@ class Bucket {
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
 			 */
-			return $item->getLeft() <= $descendant->getLeft();
+			return $item->getLeft() <= $descendant->getLeft() && $item->getRight() >= $descendant->getRight();
 		});
 	}
 
@@ -195,7 +181,7 @@ class Bucket {
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
 			 */
-			return $item->getLeft() < $descendant->getLeft();
+			return $item->getLeft() < $descendant->getLeft() && $item->getRight() > $descendant->getRight();
 		});
 	}
 
