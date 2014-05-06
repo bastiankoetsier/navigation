@@ -36,13 +36,13 @@ class ListRendererTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @test
 	 */
-	public function it_returns_correctly_rendered_html_ul_list_limited_to_level_one()
+	public function it_returns_correctly_rendered_html_ul_list_limited_to_level_two()
 	{
 		$bucket = $this->getFixtures();
 		$renderer = new ListRenderer($bucket);
 		$renderer->setCurrent(2);
 		$expectedHtml = '<ul><li><span class="active">root 2</span><ul><li>child</li></ul></li></ul>';
-		$this->assertEquals($expectedHtml,$renderer->setMaxLevel(1)->renderMenu());
+		$this->assertEquals($expectedHtml,$renderer->setMaxLevel(2)->renderMenu());
 	}
 }
  
