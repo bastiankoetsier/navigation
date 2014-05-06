@@ -29,7 +29,7 @@ class Item
 			$this->setLeft($left);
 			$this->setRight($right);
 		}
-		$this->setLevel(0);
+		$this->setLevel(1);
 		$this->setContent($content);
 		$this->setParent($parent);
 	}
