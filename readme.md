@@ -28,20 +28,21 @@ If you´re using the Laravel framework, you all you  have to do is reference the
 If you aren´t using Laravel, you have to wire up the package yourself:
 ```php
 use Bkoetsier\Navigation\Navigation;
+use Illuminate\Support\Collection;
 
-$nav = new Navigation();
+$nav = new Navigation(new Bucket(new Collection));
 
 ```
 
-> In case of using Laravel Navigation is shared via the IoC Container, so if you hydrate a bucket once, the bucket will be available all over your app.
+> In case of using Laravel Navigation is shared via the IoC Container, so if you hydrate a bucket once, the bucket will be available all over your app,
+> but the main difference is in instantiation
 
 #### Basic usage
-First step is always hydrating the bucket. To do so, you have to provide an array of objects (preferably \StdClass)
+First step is always hydrating the bucket. To do so, you have to provide an array of objects (preferably `StdClass`)
 with the following properties:
 - `itemId` unique identifier like the database index
 - `itemContent` the content that should be rendered for this item
 - `parentId` identifier of the parent
-- `uri` to be able to renderMenu this item as a link you have to provide a uri
 
 In the `fill` method you are able to rename each parameter to your corresponding properties :
 
@@ -50,50 +51,62 @@ In the `fill` method you are able to rename each parameter to your corresponding
 [
     {
         "id": 1,
-        "title": "Books",
+        "content": '<a href="/books">Books</a>',
         "parent": null,
-        "uri": "books"
     },
     {
         "id": 2,
-        "title": "Fiction",
+        "content": '<a href="/books/fiction">Fiction</a>',
         "parent": 1,
-        "uri": "books/fiction"
     }
 ]
 
 ```
-> Please note the different naming of the `itemContent` as `title` !
 
 ```php
 // format json to object-array
 $data = json_decode(file_get_contents('example.json'));
 
 // with Laravel
-Navigation::bucket()->hydrate($data, $itemIdentifier='id', $itemContent='title',$parentIdentifier='parent',$uriField = 'uri');
+Nav::fill($data, $itemIdentifier = 'id', $itemContent ='content',$parentIdentifier = 'parent');
 
 //without Laravel
-$nav->bucket()->hydrate($data, $itemIdentifier='id', $itemContent='title',$parentIdentifier='parent',$uriField = 'uri');
+$nav->fill($data, $itemIdentifier = 'id', $itemContent = 'content',$parentIdentifier = 'parent');
 ```
 
-
-After hydrating you are able to generate the desired HTML list for the menu:
+After hydrating you have to set the current item-id and call the `render`-method:
 ```php
-
 //with Laravel
-Navigation::menu('main')->subNav('Books')->renderMenu();
+// set the current active item-id, maybe from a url or db
+Nav::setCurrent(2);
+Nav::menu()->render();
 
 //without Laravel
-$nav->menu('main')->subNav('Books')->renderMenu();
-
+$nav->setCurrent(2);
+$nav->menu()->render();
 ```
+will output:
+```html
+<ul>
+    <li>
+    <a href="/books">Books</a>
+    <ul>
+        <li>
+        <span class="active"><a href="/books/fiction">Fiction</a></span>
+        </li>
+    </ul>
+    </li>
+</ul>
+```
+> Please note that the current item will be wrapped in a span.active for additional styling
+
 For the breadcrumbs you just call the same bucket:
 ```php
 //with Laravel
-Navigation::breadcrumbs()->pathTo('Fiction')->renderMenu();
+Nav::breadcrumbs()->render();
 
 //without Laravel
-$nav->breadcrumbs()->pathTo('Fiction')-renderMenu();
+$nav->breadcrumbs()->render();
 ```
 
 
