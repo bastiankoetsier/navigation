@@ -38,7 +38,7 @@ class Navigation {
 	{
 		if(is_null($this->current))
 		{
-			throw new CurrentItemIdMissingException('Current item-id must be set first');
+			$this->current = $this->getBucket()->getCollection()->first()->getId();
 		}
 		return $this->current;
 	}
