@@ -41,7 +41,7 @@ with the following properties:
 - `itemId` unique identifier like the database index
 - `itemContent` the content that should be rendered for this item
 - `parentId` identifier of the parent
-- `uri` to be able to render this item as a link you have to provide a uri
+- `uri` to be able to renderMenu this item as a link you have to provide a uri
 
 In the `fill` method you are able to rename each parameter to your corresponding properties :
 
@@ -81,19 +81,19 @@ After hydrating you are able to generate the desired HTML list for the menu:
 ```php
 
 //with Laravel
-Navigation::menu('main')->subNav('Books')->render();
+Navigation::menu('main')->subNav('Books')->renderMenu();
 
 //without Laravel
-$nav->menu('main')->subNav('Books')->render();
+$nav->menu('main')->subNav('Books')->renderMenu();
 
 ```
 For the breadcrumbs you just call the same bucket:
 ```php
 //with Laravel
-Navigation::breadcrumbs()->pathTo('Fiction')->render();
+Navigation::breadcrumbs()->pathTo('Fiction')->renderMenu();
 
 //without Laravel
-$nav->breadcrumbs()->pathTo('Fiction')-render();
+$nav->breadcrumbs()->pathTo('Fiction')-renderMenu();
 ```
 
 

@@ -4,7 +4,7 @@ use Bkoetsier\Navigation\Bucket;
 use Bkoetsier\Navigation\Items\Item;
 use Illuminate\Support\Collection;
 
-class MenuRenderer implements RendererInterface{
+class ListRenderer implements BreadcrumbsRendererInterface,MenuRendererInterface{
 
 	/**
 	 * @var \Bkoetsier\Navigation\Bucket
@@ -12,20 +12,50 @@ class MenuRenderer implements RendererInterface{
 	protected $bucket;
 	protected $done = array();
 	protected $maxLevel = 999;
+	private $current;
 
 	function __construct(Bucket $bucket)
 	{
 		$this->bucket = $bucket;
-		$this->refresh();
 	}
 
-	public function render()
+	public function setCurrent($current)
+	{
+		$this->current = $current;
+	}
+
+	public function getCurrent()
+	{
+		return $this->current;
+	}
+
+	public function setBucket(Bucket $bucket)
+	{
+		$this->bucket = $bucket;
+	}
+	public function getBucket()
+	{
+		return $this->bucket;
+	}
+
+	public function renderMenu()
 	{
 		$this->refresh();
 		$html = '<ul>';
-		$filteredItems = $this->bucket->getUntilMaxLevel($this->getMaxLevel());
+		$currentItem = $this->getCurrentItem();
+		/**
+		 * search for latest parent in this tree
+		 * otherwise list would only contain $currentItem
+		 */
+		while( ! $this->getBucket()->hasChildren($currentItem))
+		{
+			$currentItem = $this->getBucket()->findById($currentItem->getParent());
+		}
+		$children = $this->getBucket()->getChildrenAndSelf($currentItem);
+		$filteredItems = $this->bucket->getUntilMaxLevel($this->getMaxLevel(),$children);
 		foreach($filteredItems as $item)
 		{
+			$item = $this->markIfActive($item);
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
 			 */
@@ -60,6 +90,7 @@ class MenuRenderer implements RendererInterface{
 		}
 		foreach($children as $c)
 		{
+			$c = $this->markIfActive($c);
 			/**
 			 * @var $c \Bkoetsier\Navigation\Items\Item
 			 */
@@ -81,7 +112,20 @@ class MenuRenderer implements RendererInterface{
 			}
 		}
 		$html .= '</ul>';
+		return $html;
+	}
 
+	public function renderBreadcrumbs()
+	{
+		$items = $this->getBucket()->pathItems($this->getCurrent());
+		$html = '<ul>';
+		foreach($items as $item)
+		{
+			/**
+			 * @var $item \Bkoetsier\Navigation\Items\Item
+			 */
+			$html .= sprintf('<li>%s</li>',$item->getContent());
+		}
 		return $html;
 	}
 
@@ -92,6 +136,11 @@ class MenuRenderer implements RendererInterface{
 			return true;
 		}
 		return false;
+	}
+
+	protected function getCurrentItem()
+	{
+		return $this->getBucket()->findById($this->getCurrent());
 	}
 
 	protected function refresh()
@@ -116,14 +165,28 @@ class MenuRenderer implements RendererInterface{
 	{
 		if($maxLevel < 0)
 		{
-			throw new \InvalidArgumentException("Max Level must be higher greater than 0");
+			throw new \InvalidArgumentException("Max Level must be higher greater or equal to 0");
 		}
 		$this->maxLevel = $maxLevel;
 		return $this;
 	}
 
-	public function getBucket()
+	/**
+	 * @param \Bkoetsier\Navigation\Items\Item $item
+	 * @return string
+	 */
+	protected function markIfActive(Item $item)
 	{
-		return $this->bucket;
+		if ($this->isActiveItem($item))
+		{
+			$content = sprintf('<span class="active">%s</span>',$item->getContent());
+			$item->setContent($content);
+		}
+		return $item;
+	}
+
+	protected function isActiveItem(Item $item)
+	{
+		return $this->getCurrentItem()->getId() == $item->getId();
 	}
 }

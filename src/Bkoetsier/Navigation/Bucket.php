@@ -12,6 +12,10 @@ class Bucket {
 		$this->collection = $collection;
 	}
 
+	/**
+	 * @param $id
+	 * @return bool | \Bkoetsier\Navigation\Items\Item
+	 */
 	public function findById($id)
 	{
 		$allItems = $this->collection->all();
@@ -22,6 +26,10 @@ class Bucket {
 		return false;
 	}
 
+	/**
+	 * @param $content
+	 * @return Collection
+	 */
 	public function findByContent($content)
 	{
 		return $this->collection->filter(function($item)use($content){
@@ -103,7 +111,7 @@ class Bucket {
 	{
 		return is_null($filterFrom) ? $this->collection : $filterFrom;
 	}
-
+	
     public function getMaxLeft()
     {
 		return $this->getMax('left');
