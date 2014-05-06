@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/bastiankoetsier/navigation.svg?branch=master)](https://travis-ci.org/bastiankoetsier/navigation)
 # Navigation
 After filling the navigation with your menu / breadcrumb - information (e.g. categories or whatever), you´re able to
 create a fully rendered HTML list.
