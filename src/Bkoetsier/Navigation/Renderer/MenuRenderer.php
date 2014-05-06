@@ -4,7 +4,7 @@ use Bkoetsier\Navigation\Bucket;
 use Bkoetsier\Navigation\Items\Item;
 use Illuminate\Support\Collection;
 
-class Renderer {
+class MenuRenderer implements RendererInterface{
 
 	/**
 	 * @var \Bkoetsier\Navigation\Bucket
