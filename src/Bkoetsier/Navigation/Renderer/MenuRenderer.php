@@ -63,7 +63,7 @@ class MenuRenderer implements RendererInterface{
 			/**
 			 * @var $c \Bkoetsier\Navigation\Items\Item
 			 */
-			if(in_array($c->getId(),$this->done))
+			if($this->isAlreadyUsed($c->getId()))
 			{
 				continue;
 			}
@@ -83,6 +83,15 @@ class MenuRenderer implements RendererInterface{
 		$html .= '</ul>';
 
 		return $html;
+	}
+
+	protected function isAlreadyUsed($id)
+	{
+		if(in_array($id,$this->done))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	protected function refresh()
