@@ -108,6 +108,16 @@ class Bucket {
 		return $max;
 	}
 
+
+	/**
+	 * @param $filterFrom
+	 * @return \Illuminate\Support\Collection
+	 */
+	protected function getFilterFrom($filterFrom)
+	{
+		return is_null($filterFrom) ? $this->collection : $filterFrom;
+	}
+
     public function getMaxLeft()
     {
 		return $this->getMax('left');
@@ -118,14 +128,15 @@ class Bucket {
 		return $this->getMax('right');
 	}
 
-	public function hasChildren(Item $parent)
+	public function hasChildren(Item $parent,Collection $filteredCollection = null)
 	{
-		return !!count($this->getChildrenWithoutSelf($parent));
+		return !!count($this->getChildrenWithoutSelf($parent,$filteredCollection));
 	}
 
-	public function getChildrenAndSelf(Item $parent)
+	public function getChildrenAndSelf(Item $parent,Collection $filteredCollection = null)
 	{
-		return $this->collection->filter(function($item)use($parent){
+		$filterFrom = $this->getFilterFrom($filteredCollection);
+		return $filterFrom->filter(function($item)use($parent){
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
 			 */
@@ -133,9 +144,10 @@ class Bucket {
 		});
 	}
 
-	public function getChildrenWithoutSelf(Item $parent)
+	public function getChildrenWithoutSelf(Item $parent,Collection $filteredCollection = null)
 	{
-		return $this->collection->filter(function($item)use($parent){
+		$filterFrom = $this->getFilterFrom($filteredCollection);
+		return $filterFrom->filter(function($item)use($parent){
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
 			 */
@@ -143,9 +155,10 @@ class Bucket {
 		});
 	}
 
-	public function getSiblingsAndSelf(Item $sibling)
+	public function getSiblingsAndSelf(Item $sibling,Collection $filteredCollection = null)
 	{
-		return $this->collection->filter(function($item)use($sibling){
+		$filterFrom = $this->getFilterFrom($filteredCollection);
+		return $filterFrom->filter(function($item)use($sibling){
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
 			 */
@@ -153,9 +166,10 @@ class Bucket {
 		});
 	}
 
-	public function getSiblingsWithoutSelf(Item $sibling)
+	public function getSiblingsWithoutSelf(Item $sibling,Collection $filteredCollection = null)
 	{
-		return $this->collection->filter(function($item)use($sibling){
+		$filterFrom = $this->getFilterFrom($filteredCollection);
+		return $filterFrom->filter(function($item)use($sibling){
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
 			 */
@@ -163,9 +177,10 @@ class Bucket {
 		});
 	}
 
-	public function getAncestorsAndSelf(Item $descendant)
+	public function getAncestorsAndSelf(Item $descendant,Collection $filteredCollection = null)
 	{
-		return $this->collection->filter(function($item)use($descendant){
+		$filterFrom = $this->getFilterFrom($filteredCollection);
+		return $filterFrom->filter(function($item)use($descendant){
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
 			 */
@@ -173,9 +188,10 @@ class Bucket {
 		});
 	}
 
-	public function getAncestorsWithoutSelf(Item $descendant)
+	public function getAncestorsWithoutSelf(Item $descendant,Collection $filteredCollection = null)
 	{
-		return $this->collection->filter(function($item)use($descendant){
+		$filterFrom = $this->getFilterFrom($filteredCollection);
+		return $filterFrom->filter(function($item)use($descendant){
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
 			 */
@@ -183,9 +199,10 @@ class Bucket {
 		});
 	}
 
-	public function getUntilMaxLevel($maxLevel)
+	public function getUntilMaxLevel($maxLevel,Collection $filteredCollection = null)
 	{
-		return $this->collection->filter(function($item)use($maxLevel){
+		$filterFrom = $this->getFilterFrom($filteredCollection);
+		return $filterFrom->filter(function($item)use($maxLevel){
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
 			 */

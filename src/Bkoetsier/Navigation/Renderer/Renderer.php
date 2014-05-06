@@ -2,6 +2,7 @@
 
 use Bkoetsier\Navigation\Bucket;
 use Bkoetsier\Navigation\Items\Item;
+use Illuminate\Support\Collection;
 
 class Renderer {
 
@@ -22,7 +23,8 @@ class Renderer {
 	{
 		$this->refresh();
 		$html = '<ul>';
-		foreach($this->bucket->getUntilMaxLevel($this->getMaxLevel()) as $item)
+		$filteredItems = $this->bucket->getUntilMaxLevel($this->getMaxLevel());
+		foreach($filteredItems as $item)
 		{
 			/**
 			 * @var $item \Bkoetsier\Navigation\Items\Item
@@ -33,13 +35,13 @@ class Renderer {
 			}
 			$this->done[] = $item->getId();
 			$html .= '<li>'.$item->getLabel();
-			if(  ! $this->bucket->hasChildren($item))
+			if(  ! $this->bucket->hasChildren($item,$filteredItems))
 			{
 				$html .= '</li>';
 			}
 			else
 			{
-				$html .= $this->subMenu($item);
+				$html .= $this->subMenu($item,$filteredItems);
 				$html .= '</li>';
 			}
 		}
@@ -47,11 +49,11 @@ class Renderer {
 		return $html;
 	}
 
-	protected function subMenu(Item $parent)
+	protected function subMenu(Item $parent,Collection $filtered)
 	{
 		$html = '';
 		$html .= '<ul>';
-		$children = $this->bucket->getChildrenWithoutSelf($parent);
+		$children = $this->bucket->getChildrenWithoutSelf($parent,$filtered);
 		if( ! count($children) )
 		{
 			return '';
@@ -68,7 +70,7 @@ class Renderer {
 			if($parent->getLevel() +1 <= $this->getMaxLevel())
 			{
 				$html .= '<li>'.$c->getLabel();
-				$html .= $this->subMenu($c);
+				$html .= $this->subMenu($c,$filtered);
 				$html .= '</li>';
 				$this->done[] = $c->getId();
 			}
@@ -109,5 +111,10 @@ class Renderer {
 		}
 		$this->maxLevel = $maxLevel;
 		return $this;
+	}
+
+	public function getBucket()
+	{
+		return $this->bucket;
 	}
 }
