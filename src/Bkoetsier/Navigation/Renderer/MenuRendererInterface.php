@@ -1,7 +1,7 @@
 <?php namespace Bkoetsier\Navigation\Renderer;
 
 interface MenuRendererInterface {
-	public function renderMenu();
+	public function renderMenu($withParent = true);
 	
 
 } 

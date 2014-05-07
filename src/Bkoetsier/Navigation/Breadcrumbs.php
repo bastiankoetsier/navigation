@@ -24,4 +24,16 @@ class Breadcrumbs {
 		return $this->getRenderer()->renderBreadcrumbs();
 	}
 
+	public function setCurrent($id)
+	{
+		$this->getRenderer()->setCurrent($id);
+		return $this;
+	}
+
+	public function setMaxLevel($max)
+	{
+		$this->getRenderer()->setMaxLevel($max);
+		return $this;
+	}
+
 } 

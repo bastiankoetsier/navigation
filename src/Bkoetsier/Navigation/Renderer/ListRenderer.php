@@ -22,6 +22,7 @@ class ListRenderer implements BreadcrumbsRendererInterface,MenuRendererInterface
 	public function setCurrent($current)
 	{
 		$this->current = $current;
+		return $this;
 	}
 
 	public function getCurrent()
@@ -34,7 +35,7 @@ class ListRenderer implements BreadcrumbsRendererInterface,MenuRendererInterface
 		return $this->bucket;
 	}
 
-	public function renderMenu()
+	public function renderMenu($withParent = true)
 	{
 		$this->refresh();
 		$html = '<ul>';
@@ -47,7 +48,14 @@ class ListRenderer implements BreadcrumbsRendererInterface,MenuRendererInterface
 		{
 			$currentItem = $this->getBucket()->findById($currentItem->getParent());
 		}
-		$children = $this->getBucket()->getChildrenAndSelf($currentItem);
+		if($withParent)
+		{
+			$children = $this->getBucket()->getChildrenAndSelf($currentItem);
+		}
+		else
+		{
+			$children = $this->getBucket()->getChildrenWithoutSelf($currentItem);
+		}
 		$filteredItems = $this->bucket->getUntilMaxLevel($this->getMaxLevel(),$children);
 		foreach($filteredItems as $item)
 		{

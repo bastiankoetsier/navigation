@@ -3,21 +3,36 @@
 use Bkoetsier\Navigation\Exceptions\CurrentItemIdMissingException;
 use Bkoetsier\Navigation\Exceptions\ItemIdNotFoundException;
 use Bkoetsier\Navigation\Renderer\ListRenderer;
+use Illuminate\Support\Collection;
 
 class Navigation {
 
+	/**
+	 * @var Bucket
+	 */
 	protected $bucket;
+	/**
+	 * @var
+	 */
 	protected $current;
 	/**
 	 * @var Renderer\ListRenderer
 	 */
 	protected $renderer;
-	protected $menu;
+	/**
+	 * @var \Illuminate\Support\Collection
+	 */
+	protected $menus;
+
+	/**
+	 * @var \Bkoetsier\Navigation\Breadcrumbs
+	 */
 	protected $breadcrumbs;
 
 	function __construct(Bucket $bucket)
 	{
 		$this->bucket = $bucket;
+		$this->menus = new Collection;
 	}
 
 	public function setCurrent($id)
@@ -27,9 +42,16 @@ class Navigation {
 			throw new ItemIdNotFoundException("Item with id: $id could not be found");
 		}
 		$this->current = $id;
-		if (! is_null($this->renderer))
+		foreach($this->menus as $menu)
 		{
-			$this->renderer->setCurrent($id);
+			/**
+			 * @var $menu \Bkoetsier\Navigation\Menu
+			 */
+			$menu->getRenderer()->setCurrent($id);
+		}
+		if (! is_null($this->breadcrumbs))
+		{
+			$this->breadcrumbs->getRenderer()->setCurrent($id);
 		}
 		return $this;
 	}
@@ -49,15 +71,21 @@ class Navigation {
 		return $this;
 	}
 
-	public function menu()
+	public function menu($name)
 	{
-		if(! is_null($this->menu))
+		if(isset($this->menus[$name]))
 		{
-			return $this->menu;
+			return $this->menus[$name];
 		}
-		$this->menu = new Menu;
-		$this->menu->setRenderer($this->getRenderer());
-		return $this->menu;
+		$menu = new Menu;
+		$menu->setRenderer($this->getRenderer());
+		$this->menus->put($name,$menu);
+		return $this->menus[$name];
+	}
+
+	public function getMenus()
+	{
+		return $this->menus;
 	}
 
 	public function breadcrumbs()
@@ -91,10 +119,5 @@ class Navigation {
 		return $this->renderer;
 	}
 
-	public function setMaxLevel($max)
-	{
-		$this->getRenderer()->setMaxLevel($max);
-		return $this;
-	}
 
 }
