@@ -15,7 +15,7 @@ Pull in the package with composer:
 ```
 
 ### Laravel user
-If you´re using the Laravel framework, you all you  have to do is reference the service provider and you are ready to go !
+If you´re using the Laravel framework, all you  have to do is reference the service provider and you are ready to go !
 ```php
 // app/config/app.php
 
