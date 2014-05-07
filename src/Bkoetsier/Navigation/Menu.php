@@ -19,9 +19,9 @@ class Menu {
 		return $this->renderer;
 	}
 
-	public function render()
+	public function render($withSelf = true)
 	{
-		return $this->getRenderer()->renderMenu();
+		return $this->getRenderer()->renderMenu($withSelf);
 	}
 
 	public function setCurrent($id)
