@@ -102,6 +102,7 @@ will output:
 </ul>
 ```
 > Please note that the current item will be wrapped in a span.active for additional styling
+> `Books` has a Level of `1`
 
 If you have multiple navigation on your site you can set different states for each one:
 ```php
