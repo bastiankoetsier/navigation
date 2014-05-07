@@ -86,6 +86,8 @@ Nav::menu()->render();
 $nav->setCurrent(2);
 $nav->menu()->render();
 ```
+> Attention: when you use ```php Nav::setCurrent()``` it will be set for each menu you have defined !
+
 will output:
 ```html
 <ul>
@@ -101,6 +103,16 @@ will output:
 ```
 > Please note that the current item will be wrapped in a span.active for additional styling
 
+If you have multiple navigation on your site you can set different states for each one:
+```php
+Nav::menu('main')->setCurrent(1)->setMaxLevel(1);
+Nav::menu('sub')->setCurrent(2);
+
+//will render until level == 1 from id 1 down
+Nav::menu('main')->render();
+// will render from id 2 down until the end
+Nav::menu('sub')->render();
+```
 For the breadcrumbs you just call the same bucket:
 ```php
 //with Laravel
