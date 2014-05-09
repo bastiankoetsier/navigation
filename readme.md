@@ -9,7 +9,7 @@ Pull in the package with composer:
 ```js
 {
     "require": {
-                "bkoetsier/navigation": "dev-master"
+                "bkoetsier/navigation": "1.0.*"
                 }
 }
 ```
@@ -80,11 +80,11 @@ After hydrating you have to set the current item-id and call the `render`-method
 //with Laravel
 // set the current active item-id, maybe from a url or db
 Nav::setCurrent(2);
-Nav::menu()->render();
+Nav::menu('main)->render();
 
 //without Laravel
 $nav->setCurrent(2);
-$nav->menu()->render();
+$nav->menu('main)->render();
 ```
 > Attention: when you use ```php Nav::setCurrent()``` it will be set for each menu you have defined !
 
