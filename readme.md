@@ -64,7 +64,7 @@ $example = [
 ```
 
 ```php
-// format json to object-array
+// array to \Std
 $data = json_decode(json_encode($example));
 
 // with Laravel
