@@ -47,26 +47,25 @@ with the following properties:
 
 In the `fill` method you are able to rename each parameter to your corresponding properties :
 
-```js
-// example.json
-[
-    {
+```php
+$example = [
+    [
         "id": 1,
         "content": '<a href="/books">Books</a>',
         "parent": null,
-    },
-    {
+    ],
+    [
         "id": 2,
         "content": '<a href="/books/fiction">Fiction</a>',
         "parent": 1,
-    }
-]
+    ]
+];
 
 ```
 
 ```php
 // format json to object-array
-$data = json_decode(file_get_contents('example.json'));
+$data = json_decode(json_encode(file_get_contents('example.json')));
 
 // with Laravel
 Nav::fill($data, $itemIdentifier = 'id', $itemContent ='content',$parentIdentifier = 'parent');
@@ -84,7 +83,7 @@ Nav::menu('main')->render();
 
 //without Laravel
 $nav->setCurrent(2);
-$nav->menu('main)->render();
+$nav->menu('main')->render();
 ```
 > Attention: when you use ```php Nav::setCurrent()``` it will be set for each menu you have defined !
 
