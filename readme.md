@@ -65,7 +65,7 @@ $example = [
 
 ```php
 // format json to object-array
-$data = json_decode(json_encode(file_get_contents('example.json')));
+$data = json_decode(json_encode($example));
 
 // with Laravel
 Nav::fill($data, $itemIdentifier = 'id', $itemContent ='content',$parentIdentifier = 'parent');
