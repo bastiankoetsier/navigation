@@ -9,7 +9,7 @@ Pull in the package with composer:
 ```js
 {
     "require": {
-                "bkoetsier/navigation": "dev-master"
+                "bkoetsier/navigation": "1.0.*"
                 }
 }
 ```
