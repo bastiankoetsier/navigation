@@ -80,7 +80,7 @@ After hydrating you have to set the current item-id and call the `render`-method
 //with Laravel
 // set the current active item-id, maybe from a url or db
 Nav::setCurrent(2);
-Nav::menu('main)->render();
+Nav::menu('main')->render();
 
 //without Laravel
 $nav->setCurrent(2);
